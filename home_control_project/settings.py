@@ -16,17 +16,14 @@ if env_path.exists():
 else:
     print("env.py not found. Skipping environment variable setup.")
 # Base directory for the project
-BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-
-# Reading environment variables
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
-API_USERNAME = os.getenv("DJANGO_API_USERNAME")
-API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 home_online_status = {}
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+API_USERNAME = os.getenv("DJANGO_API_USERNAME")
+API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -41,16 +38,16 @@ try:
     ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS", "[]"))
 
 except json.JSONDecodeError:
-     ALLOWED_HOSTS = []
-     print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
+    ALLOWED_HOSTS = []
+    print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
 
 try:
     CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", "[]"))
     CORS_ALLOW_ALL_ORIGINS = True
 
 except json.JSONDecodeError:
-     CSRF_TRUSTED_ORIGINS = []
-     print("Invalid CSRF_TRUSTED_ORIGINS format, defaulting to empty list.")
+    CSRF_TRUSTED_ORIGINS = []
+    print("Invalid CSRF_TRUSTED_ORIGINS format, defaulting to empty list.")
 
 # Installed applications
 INSTALLED_APPS = [
@@ -85,9 +82,9 @@ INSTALLED_APPS = [
 # Channel layers for real-time communication (WebSockets)
 ASGI_APPLICATION = "home_control_project.asgi.application"
 CHANNEL_LAYERS = {
-'default': {
-    'BACKEND': 'channels.layers.InMemoryChannelLayer',
-},
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
 }
 
 
@@ -147,11 +144,11 @@ TEMPLATES = [
 WSGI_APPLICATION = "home_control_project.wsgi.application"
 if not DEBUG:
     DATABASES = {
-            "default": dj_database_url.config(
-                conn_max_age=1800,  # Menține conexiunile deschise timp de 30 de minute
-                ssl_require=True,   # Asigură-te că conexiunea folosește SSL pentru securitate
-            )
-        }
+        "default": dj_database_url.config(
+            conn_max_age=6800,  # Menține conexiunile deschise timp de 30 de minute
+            ssl_require=True,  # Asigură-te că conexiunea folosește SSL pentru securitate
+        )
+    }
 
 else:
     # Configurare pentru local (de exemplu SQLite sau PostgreSQL local)
@@ -211,14 +208,13 @@ if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 else:
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Primary key field type
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 if not DEBUG:
-    # Configurații specifice pentru producție
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -228,12 +224,9 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
-
-    # Configurare SSL pentru Heroku
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     django_heroku.settings(locals())
 else:
-    # Configurații pentru mediul local
     SECURE_SSL_REDIRECT = False
     SECURE_HSTS_SECONDS = 0
     CSRF_COOKIE_SECURE = False
