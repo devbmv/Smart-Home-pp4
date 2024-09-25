@@ -56,13 +56,13 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Installed applications
 INSTALLED_APPS = [
     # Aplicațiile esențiale ale Django
+    "django.contrib.sites",  # Pune `django.contrib.sites` după aplicațiile esențiale Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites",  # Pune `django.contrib.sites` după aplicațiile esențiale Django
     # Aplicații terțe
     "cloudinary_storage",
     "allauth",
@@ -85,21 +85,11 @@ INSTALLED_APPS = [
 
 # Channel layers for real-time communication (WebSockets)
 ASGI_APPLICATION = "home_control_project.asgi.application"
-if not DEBUG:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [(os.getenv("REDIS_URL", "redis://127.0.0.1:6379"))],
-            },
-        },
-    }
-else:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels.layers.InMemoryChannelLayer",
-        },
-    }
+CHANNEL_LAYERS = {
+'default': {
+    'BACKEND': 'channels.layers.InMemoryChannelLayer',
+},
+}
 
 
 # Authentication settings
@@ -155,17 +145,14 @@ TEMPLATES = [
 ]
 
 # WSGI application
-WSGI_APPLICATION = "home_control_project.wsgi.application"
-
-ON_HEROKU = "HEROKU" in os.environ
-
-if ON_HEROKU:
+WSGI_APPLICATION = "home_control_project.asgi.application"
+if not DEBUG
     DATABASES = {
-        "default": dj_database_url.config(
-            conn_max_age=1800,  # Menține conexiunile deschise timp de 30 de minute
-            ssl_require=True,   # Asigură-te că conexiunea folosește SSL pentru securitate
-        )
-    }
+            "default": dj_database_url.config(
+                conn_max_age=1800,  # Menține conexiunile deschise timp de 30 de minute
+                ssl_require=True,   # Asigură-te că conexiunea folosește SSL pentru securitate
+            )
+        }
 
 else:
     # Configurare pentru local (de exemplu SQLite sau PostgreSQL local)
