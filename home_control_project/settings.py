@@ -37,21 +37,20 @@ def debug(data):
 
 
 # Allowed hosts configuration
-# try:
-#ALLOWED_HOSTS = ["*"]  # json.loads(os.getenv("ALLOWED_HOSTS", "[]"))
-ALLOWED_HOSTS = ['*']
+try:
+    ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS", "[]"))
 
-# except json.JSONDecodeError:
-#     ALLOWED_HOSTS = []
-#     print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
+except json.JSONDecodeError:
+     ALLOWED_HOSTS = []
+     print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
 
-# try:
-CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", "[]"))
-CORS_ALLOW_ALL_ORIGINS = True
+try:
+    CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", "[]"))
+    CORS_ALLOW_ALL_ORIGINS = True
 
-# except json.JSONDecodeError:
-#     CSRF_TRUSTED_ORIGINS = []
-#     print("Invalid CSRF_TRUSTED_ORIGINS format, defaulting to empty list.")
+except json.JSONDecodeError:
+     CSRF_TRUSTED_ORIGINS = []
+     print("Invalid CSRF_TRUSTED_ORIGINS format, defaulting to empty list.")
 
 # Installed applications
 INSTALLED_APPS = [
