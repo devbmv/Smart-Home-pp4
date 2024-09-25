@@ -76,7 +76,7 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
                     debug(f"[{current_time}] Error sending request to ESP32: {type(e).__name__}\n")
                 home_online_status[user_id] = False
 
-            sleep(check_interval)
+            sleep(check_interval if check_interval>5 else 30)
 
     except UserSettings.DoesNotExist:
         current_time = get_current_time()
