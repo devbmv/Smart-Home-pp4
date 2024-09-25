@@ -48,7 +48,7 @@ except json.JSONDecodeError:
     print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
 
 try:
-    CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", "[]"))
+    CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", '["https://home-control-dbba5bec072c.herokuapp.com"]'))
     CORS_ALLOW_ALL_ORIGINS = True
 
 except json.JSONDecodeError:
