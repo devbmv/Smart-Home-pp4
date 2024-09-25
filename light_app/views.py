@@ -22,6 +22,8 @@ from home_control_project.settings import home_online_status
 from django.db import connections
 from django.http import JsonResponse
 import os
+from django.core.cache import cache
+
 # Variabile globale pentru controlul ping-ului
 ping_active = True
 home_online=False
@@ -34,9 +36,17 @@ def close_db_connections(request):
         return JsonResponse({"status": "error", "message": "Unauthorized access."}, status=401)
 
     try:
+        # Cachează momentul când închidem ultima dată conexiunile
+        last_closed = cache.get('last_db_connection_close')
+        if last_closed:
+            return JsonResponse({"status": "success", "message": "Connections were recently closed."})
+
         # Close all database connections for all defined databases
         for conn in connections.all():
             conn.close()
+
+        # Setăm un timeout în cache pentru a nu închide conexiunile prea des
+        cache.set('last_db_connection_close', True, timeout=60)
 
         return JsonResponse({"status": "success", "message": "All database connections have been closed."})
     except Exception as e:

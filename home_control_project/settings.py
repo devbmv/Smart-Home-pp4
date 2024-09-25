@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "light_app",
     "firmware_manager",
+    'debug_toolbar',
     "channels",
 ]
 SITE_ID = 1
@@ -116,6 +117,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "allauth.account.middleware.AccountMiddleware",
     "light_app.middleware.UserSettingsMiddleware",
     "light_app.middleware.UserLanguageMiddleware",
@@ -211,4 +213,5 @@ else:
 # Primary key field type
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 django_heroku.settings(locals())
