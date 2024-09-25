@@ -26,7 +26,7 @@ import os
 ping_active = True
 home_online=False
 
-SECRET_TOKEN = os.getenv("SECRET_TOKEN")  # Ensure to set this in your environment variables
+SECRET_TOKEN = os.getenv("DJANGO_API_PASSWORD")  # Ensure to set this in your environment variables
 
 def close_db_connections(request):
     token = request.GET.get('token', None)
