@@ -30,7 +30,9 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
         while True:
             try:
                 # Actualizează intervalul
-                check_interval = settings.server_check_interval
+                check_interval = settings.server_check_interval 
+                if check_interval<0 or check_interval==None:
+                    check_interval=30
 
                 # Construim URL-ul și trimitem intervalul doar dacă s-a schimbat
                 if (

@@ -29,9 +29,11 @@ defusedxml==0.7.1
 dill==0.3.8
 distlib==0.3.8
 dj-database-url==0.5.0
+cloudinary
 dj3-cloudinary-storage==0.0.6
 Django==4.2.9
 django-allauth==0.57.0
+dj_database_url
 django-ckeditor==6.7.1
 django-cloudinary-storage==0.3.0
 django-crispy-forms==2.1
