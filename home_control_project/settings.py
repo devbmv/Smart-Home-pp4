@@ -214,4 +214,5 @@ else:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = {'js'}
 django_heroku.settings(locals())
