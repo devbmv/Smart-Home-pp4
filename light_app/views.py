@@ -19,13 +19,14 @@ from django.apps import AppConfig
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from home_control_project.settings import home_online_status
-from django.db import connection
-
+from django.db import connections
+from django.http import JsonResponse
+import os
 # Variabile globale pentru controlul ping-ului
 ping_active = True
 home_online=False
 
-SECRET_TOKEN = "1234" 
+SECRET_TOKEN = os.getenv("SECRET_TOKEN")  # Ensure to set this in your environment variables
 
 def close_db_connections(request):
     token = request.GET.get('token', None)
@@ -33,7 +34,10 @@ def close_db_connections(request):
         return JsonResponse({"status": "error", "message": "Unauthorized access."}, status=401)
 
     try:
-        connection.close()  # Close the current database connection
+        # Close all database connections for all defined databases
+        for conn in connections.all():
+            conn.close()
+
         return JsonResponse({"status": "success", "message": "All database connections have been closed."})
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)})
