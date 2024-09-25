@@ -114,7 +114,7 @@ def home(request):
 
 @login_required
 def room_list_view(request):
-    rooms = Room.objects.filter(user=request.user).prefetch_related("lights").all()
+    rooms = Room.objects.prefetch_related('lights').all()
     paginator = Paginator(rooms, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)

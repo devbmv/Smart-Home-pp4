@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from .models import UserSettings
 import ssl, socket
+from django.db import connection
 
 ip_sent = False
 home_home_url = ""
@@ -23,10 +24,10 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
     global last_message
     global last_check_interval
    # Așteaptă puțin înainte de a șterge consola
+    settings = UserSettings.objects.get(user_id=user_id)
 
     while True:
         try:
-            settings = UserSettings.objects.get(user_id=user_id)
             check_interval = settings.server_check_interval  # Actualizează intervalul
 
             # Construim URL-ul și trimitem intervalul doar dacă s-a schimbat sau alte condiții sunt îndeplinite
@@ -68,8 +69,9 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
             else:
                 debug(f"[{current_time}] Error sending request to ESP32: {type(e).__name__}\n")
             home_online_status[user_id] = False
-
+        connection.close()
         sleep(check_interval)
+
 
 def start_ping_for_user(user):
     try:
