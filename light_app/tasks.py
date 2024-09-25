@@ -11,29 +11,17 @@ ip_sent = False
 home_home_url = ""
 last_message = ""
 last_check_interval=0
-sent_certificate=False
 # Funcția pentru a obține timpul curent ca string
 def get_current_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def get_heroku_certificate():
-    context = ssl.create_default_context()
-    conn = context.wrap_socket(
-        socket.socket(socket.AF_INET),
-        server_hostname="home-control-dbba5bec072c.herokuapp.com",
-    )
-    conn.connect(("home-control-dbba5bec072c.herokuapp.com", 443))
-    cert = conn.getpeercert(True)
-    return ssl.DER_cert_to_PEM_cert(cert)
-    
 def send_ping_to_esp32(user_ip, check_interval, user_id):
-
+    
     global ip_sent
     global home_home_url
     global last_message
     global last_check_interval
-    global sent_certificate
    # Așteaptă puțin înainte de a șterge consola
 
     while True:
@@ -53,23 +41,6 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
                 ip_sent = True
             else:
                 home_url = f"http://{user_ip}"
-            certificate = get_heroku_certificate()
-            if certificate and not sent_certificate:
-                home_url = f"http://{user_ip}/upload_cert"
-                # Facem cererea POST pentru a trimite certificatul către ESP32
-                try:
-                    response = requests.post(
-                        home_url,
-                        data={
-                            "certificate": certificate,  # Trimiterea certificatului
-                            "check_interval": check_interval
-                        },
-                        timeout=20
-                    )
-                    sent_certificate=True
-                except requests.RequestException as e:
-                    last_message = f"Error send certificate to esp32 : {str(e)}"
-            else:                
                 try:
                     response = requests.get(home_url, timeout=20)
                     last_message = response.text
@@ -98,8 +69,6 @@ def send_ping_to_esp32(user_ip, check_interval, user_id):
                 debug(f"[{current_time}] Error sending request to ESP32: {type(e).__name__}\n")
             home_online_status[user_id] = False
 
-        print(last_check_interval)
-        print(check_interval)
         sleep(check_interval)
 
 def start_ping_for_user(user):
@@ -107,7 +76,6 @@ def start_ping_for_user(user):
         settings = UserSettings.objects.get(user=user)
         user_ip = settings.m5core2_ip
         check_interval = settings.server_check_interval
-
         if user_ip:
             # Inițializăm starea home_online ca False pentru acest utilizator
             home_online_status[user.id] = False
