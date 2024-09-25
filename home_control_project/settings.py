@@ -142,35 +142,41 @@ TEMPLATES = [
     },
 ]
 
+import os
+import dj_database_url
+
 # WSGI application
 WSGI_APPLICATION = "home_control_project.wsgi.application"
+
 if not DEBUG:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL"),
-            conn_max_age=600,  # Menține conexiunile deschise pentru 10 minute (600 secunde)
-            ssl_require=True   # Asigură-te că conexiunile folosesc SSL
-        )
-    }
-    # Adaugă setări suplimentare pentru pooling de conexiuni
-    DATABASES["default"]["ENGINE"] = "django_postgrespool2"  # Activăm pooling-ul de conexiuni
-    DATABASES["default"]["POOL_SIZE"] = 5  # Numărul maxim de conexiuni în pool
-    DATABASES
+    # Obține URL-ul bazei de date din variabilele de mediu
+    db_url = os.environ.get("DATABASE_URL")
+    
+    if db_url:
+        DATABASES = {
+            "default": dj_database_url.parse(db_url)
+        }
+
+        # Setează timp de menținere a conexiunilor și SSL
+        DATABASES["default"]["CONN_MAX_AGE"] = 600  # Menține conexiunile deschise pentru 10 minute
+        DATABASES["default"]["OPTIONS"] = {'sslmode': 'require'}  # Asigură conexiunea SSL
+        
+        # Adaugă setări suplimentare pentru pooling de conexiuni
+        DATABASES["default"]["ENGINE"] = "django_postgrespool2"  # Activăm pooling-ul de conexiuni
+        DATABASES["default"]["POOL_SIZE"] = 5  # Numărul maxim de conexiuni în pool
+    
+    else:
+        print("DATABASE_URL not set in environment variables")
+
 else:
     # Configurare pentru local (de exemplu SQLite sau PostgreSQL local)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",  # Sau PostgreSQL local
-            "NAME": BASE_DIR / "db.sqlite3",  # Dacă vrei să folosești SQLite local
-            # Pentru PostgreSQL local, folosește următoarele setări:
-            # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            # 'NAME': 'numele_bazei_de_date',
-            # 'USER': 'utilizatorul_tau',
-            # 'PASSWORD': 'parola_ta',
-            # 'HOST': 'localhost',
-            # 'PORT': '5432',
+            "NAME": BASE_DIR / "db.sqlite3",  # Dacă folosești SQLite local
         }
     }
+
 
 CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 
