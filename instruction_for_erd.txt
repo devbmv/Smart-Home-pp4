@@ -1,0 +1,66 @@
+On UBUNTU :
+sudo apt-get install graphviz libgraphviz-dev
+pip install pygraphviz
+python manage.py graph_models -a -o ERD.png
+
+
+
+on Windows : 
+
+Here’s how to install Graphviz, pygraphviz, and generate an ERD on Windows.
+
+Step 1: Install Graphviz on Windows
+Download and Install Graphviz:
+
+Go to the Graphviz download page.
+Download the appropriate installer for Windows (either .exe or .msi).
+Install it, and make sure to check the option to add Graphviz to the system PATH during installation, or add it manually later.
+Verify Installation: After installing, open Command Prompt and verify the installation by running:
+
+bash
+Copy code
+dot -V
+This should return the version of Graphviz if it’s installed correctly.
+
+Step 2: Install pygraphviz using pip
+Set the Environment Variable for Graphviz: Before installing pygraphviz, ensure that Graphviz is in the system PATH. If it's not, follow these steps:
+
+Open Start Menu, search for Environment Variables.
+Click Edit the system environment variables.
+In the dialog box, click Environment Variables.
+Under System Variables, find the Path variable, select it, and click Edit.
+Add the path where you installed Graphviz (e.g., C:\Program Files\Graphviz\bin).
+Install pygraphviz: Now, install pygraphviz using pip in your virtual environment:
+
+bash
+Copy code
+pip install pygraphviz
+Step 3: Generate ERD using Django Extensions
+Ensure Django Extensions is Installed: If you haven't installed django-extensions, do so by running:
+
+bash
+Copy code
+pip install django-extensions
+Update INSTALLED_APPS: Add 'django_extensions' to your INSTALLED_APPS in settings.py:
+
+python
+Copy code
+INSTALLED_APPS = [
+    # other apps
+    'django_extensions',
+]
+Generate ERD: Now you can generate the ERD using the following command in your Command Prompt:
+
+bash
+Copy code
+python manage.py graph_models -a -o ERD.png
+This command will generate an image ERD.png in your project folder with the entity-relationship diagram (ERD) of your models.
+
+Troubleshooting Tips
+If the command does not work, make sure that the Graphviz installation is correct and added to the PATH.
+You can also try running the dot command directly to verify Graphviz:
+bash
+Copy code
+dot -Tpng -O file.dot
+If you get errors during pygraphviz installation, double-check that the graphviz binaries are available in your environment.
+This should get pygraphviz and Graphviz working correctly on Windows!

@@ -1,0 +1,289 @@
+[
+    {
+        "model": "light_app.choice",
+        "pk": 3,
+        "fields": {
+            "name": "ON"
+        }
+    },
+    {
+        "model": "light_app.choice",
+        "pk": 4,
+        "fields": {
+            "name": "OFF"
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 2,
+        "fields": {
+            "name": "Kitchen",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 3,
+        "fields": {
+            "name": "Bathroom",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 4,
+        "fields": {
+            "name": "Living Room",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 5,
+        "fields": {
+            "name": "Bedroom",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 6,
+        "fields": {
+            "name": "Dining Room",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 7,
+        "fields": {
+            "name": "Hallways and Corridors",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 8,
+        "fields": {
+            "name": "Home Office",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 9,
+        "fields": {
+            "name": "Outdoor Spaces(e.g.,Patio,Porch)",
+            "user": 2
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 5,
+        "fields": {
+            "name": "Ceiling Light",
+            "room": 4,
+            "description": "Provides general illumination for the entire room.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 6,
+        "fields": {
+            "name": "Chandelier",
+            "room": 4,
+            "description": "Often a decorative centerpiece, hanging from the ceiling",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 7,
+        "fields": {
+            "name": "Floor Lamp",
+            "room": 4,
+            "description": "A tall lamp that stands on the floor, usually used for ambient lighting.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 8,
+        "fields": {
+            "name": "Table Lamp",
+            "room": 4,
+            "description": "A smaller lamp placed on tables or sideboards for localized lighting.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 9,
+        "fields": {
+            "name": "Wall Sconce",
+            "room": 4,
+            "description": "A light fixture mounted on the wall, adding both ambiance and style.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 10,
+        "fields": {
+            "name": "Recessed Lighting",
+            "room": 4,
+            "description": "Lights that are embedded into the ceiling for a sleek, modern look.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 11,
+        "fields": {
+            "name": "Track Lighting",
+            "room": 4,
+            "description": "Adjustable lights mounted on a track, offering flexible lighting options.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 12,
+        "fields": {
+            "name": "Accent Lighting",
+            "room": 4,
+            "description": "Used to highlight specific features or decorations in the room.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 13,
+        "fields": {
+            "name": "Overhead Ceiling Light",
+            "room": 2,
+            "description": "The primary light source for the kitchen, often centrally located.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 14,
+        "fields": {
+            "name": "Pendant Lights",
+            "room": 2,
+            "description": "Hanging lights over a kitchen island or dining table.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 15,
+        "fields": {
+            "name": "Under-Cabinet Lighting",
+            "room": 2,
+            "description": "Lights installed under kitchen cabinets to illuminate countertops.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 16,
+        "fields": {
+            "name": "Recessed Ceiling Lights",
+            "room": 2,
+            "description": "Discreet lights built into the ceiling.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 17,
+        "fields": {
+            "name": "Track Lighting",
+            "room": 2,
+            "description": "Adjustable lighting for illuminating different areas of the kitchen.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 18,
+        "fields": {
+            "name": "Range Hood Lighting",
+            "room": 2,
+            "description": "Lights built into the range hood above the stove.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 19,
+        "fields": {
+            "name": "Vanity Lights",
+            "room": 3,
+            "description": "Lights placed above or alongside bathroom mirrors.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 20,
+        "fields": {
+            "name": "Recessed Ceiling Lights",
+            "room": 3,
+            "description": "Subtle lights embedded in the ceiling, often used in showers.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 21,
+        "fields": {
+            "name": "Wall Sconces",
+            "room": 3,
+            "description": "Wall-mounted lights that add both function and style.",
+            "state": 2,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 22,
+        "fields": {
+            "name": "Overhead Ceiling Light",
+            "room": 3,
+            "description": "The main light source in the bathroom.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 23,
+        "fields": {
+            "name": "Mirror Lighting",
+            "room": 3,
+            "description": "Lights integrated into or around mirrors for better illumination.",
+            "state": 1,
+            "choices": []
+        }
+    }
+]
