@@ -145,8 +145,8 @@ TEMPLATES = [
 ]
 
 # WSGI application
-WSGI_APPLICATION = "home_control_project.asgi.application"
-if not DEBUG
+WSGI_APPLICATION = "home_control_project.wsgi.application"
+if not DEBUG:
     DATABASES = {
             "default": dj_database_url.config(
                 conn_max_age=1800,  # Menține conexiunile deschise timp de 30 de minute
