@@ -6,9 +6,15 @@ import django_heroku
 from django.utils.translation import gettext_lazy as _
 import json
 import sys
+from pathlib import Path
+import os
+import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 env_path = Path(__file__).resolve().parent / "env.py"
-if env_path.exists():
+if os.path.isfile("env.py"):
     try:
         import env
     except ImportError as e:
@@ -51,34 +57,33 @@ except json.JSONDecodeError:
 
 # Installed applications
 INSTALLED_APPS = [
-    # Aplicațiile esențiale ale Django
-    "django.contrib.sites",  # Pune `django.contrib.sites` după aplicațiile esențiale Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
-    # Aplicații terțe
-    "cloudinary_storage",
+    "django.contrib.sites",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "cloudinary_storage",
+    "django.contrib.staticfiles",
+    "cloudinary",
     "allauth.socialaccount.providers.google",
     "crispy_forms",
     "crispy_bootstrap5",
     "django_summernote",
-    "cloudinary",
     "django_resized",
     "django_extensions",
-    # Aplicațiile tale personalizate
     "light_app",
     "firmware_manager",
-    # `channels` după celelalte aplicații
     "channels",
 ]
+SITE_ID = 1
 
-
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 # Channel layers for real-time communication (WebSockets)
 ASGI_APPLICATION = "home_control_project.asgi.application"
 CHANNEL_LAYERS = {
@@ -89,9 +94,6 @@ CHANNEL_LAYERS = {
 
 
 # Authentication settings
-SITE_ID = 1
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -144,12 +146,16 @@ TEMPLATES = [
 WSGI_APPLICATION = "home_control_project.wsgi.application"
 if not DEBUG:
     DATABASES = {
-        "default": dj_database_url.config(
-            conn_max_age=6800,  # Menține conexiunile deschise timp de 30 de minute
-            ssl_require=True,  # Asigură-te că conexiunea folosește SSL pentru securitate
+        "default": dj_database_url.parse(
+            os.environ.get("DATABASE_URL"),
+            conn_max_age=600,  # Menține conexiunile deschise pentru 10 minute (600 secunde)
+            ssl_require=True   # Asigură-te că conexiunile folosesc SSL
         )
     }
-
+    # Adaugă setări suplimentare pentru pooling de conexiuni
+    DATABASES["default"]["ENGINE"] = "django_postgrespool2"  # Activăm pooling-ul de conexiuni
+    DATABASES["default"]["POOL_SIZE"] = 5  # Numărul maxim de conexiuni în pool
+    DATABASES
 else:
     # Configurare pentru local (de exemplu SQLite sau PostgreSQL local)
     DATABASES = {
