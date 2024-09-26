@@ -11,6 +11,7 @@ def update_esp_firmware(request):
     # Renders the HTML page where the user can upload firmware
     return render(request, "firmware_manager/update.html")
 
+
 def chatHome(request):
     # Renders the HTML page where the user can upload firmware
     return render(request, "firmware_manager/chat.html")
@@ -37,7 +38,7 @@ def upload_firmware(request):
             return JsonResponse(
                 {
                     "status": "uploaded_to_django",
-                    "message": "Firmware uploaded to Django successfully. Now uploading to ESP32..."
+                    "message": "Firmware uploaded to Django successfully. Now uploading to ESP32...",
                 }
             )
         return HttpResponse(status=405)
@@ -57,7 +58,9 @@ def upload_to_esp32(request):
 
         # Trimite fișierul către ESP32 prin endpoint-ul /django_update_firmware
         with open(file_path, "rb") as f:
-            url = f"http://{request.user_ip}/django_update_firmware"  # Adresa IP a ESP32
+            url = (
+                f"http://{request.user_ip}/django_update_firmware"  # Adresa IP a ESP32
+            )
             response = requests.post(url, files={"firmware": f})
 
         if response.status_code == 200:

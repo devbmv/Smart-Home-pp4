@@ -1,6 +1,7 @@
+# light_app/routing.py
 from django.urls import path
-from .consumers import MyWebSocketConsumer
+from . import consumers  # Asigură-te că ai un fișier consumers.py
 
 websocket_urlpatterns = [
-    path('ws/socket-server/', MyWebSocketConsumer.as_asgi()),
+    path('ws/goo/', consumers.MyWebSocketConsumer.as_asgi()),  # Definim ruta WebSocket
 ]

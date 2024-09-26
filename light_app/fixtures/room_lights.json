@@ -1,16 +1,10 @@
 [
     {
-        "model": "light_app.choice",
-        "pk": 3,
+        "model": "light_app.room",
+        "pk": 1,
         "fields": {
-            "name": "ON"
-        }
-    },
-    {
-        "model": "light_app.choice",
-        "pk": 4,
-        "fields": {
-            "name": "OFF"
+            "name": "Living Room",
+            "user": 1
         }
     },
     {
@@ -18,73 +12,101 @@
         "pk": 2,
         "fields": {
             "name": "Kitchen",
-            "user": 2
+            "user": 1
         }
     },
     {
         "model": "light_app.room",
         "pk": 3,
         "fields": {
-            "name": "Bathroom",
-            "user": 2
+            "name": "Bedroom",
+            "user": 1
         }
     },
     {
         "model": "light_app.room",
         "pk": 4,
         "fields": {
-            "name": "Living Room",
-            "user": 2
+            "name": "Bathroom",
+            "user": 1
         }
     },
     {
         "model": "light_app.room",
         "pk": 5,
-        "fields": {
-            "name": "Bedroom",
-            "user": 2
-        }
-    },
-    {
-        "model": "light_app.room",
-        "pk": 6,
         "fields": {
             "name": "Dining Room",
-            "user": 2
+            "user": 1
+        }
+    },
+    {
+        "model": "light_app.room",
+        "pk": 6,
+        "fields": {
+            "name": "Home Office",
+            "user": 1
         }
     },
     {
         "model": "light_app.room",
         "pk": 7,
         "fields": {
-            "name": "Hallways and Corridors",
-            "user": 2
+            "name": "Outdoor Spaces",
+            "user": 1
         }
     },
     {
-        "model": "light_app.room",
-        "pk": 8,
+        "model": "light_app.light",
+        "pk": 1,
         "fields": {
-            "name": "Home Office",
-            "user": 2
+            "name": "Chandelier",
+            "room": 1,
+            "description": "A decorative centerpiece for the living room.",
+            "state": 1,
+            "choices": []
         }
     },
     {
-        "model": "light_app.room",
-        "pk": 9,
+        "model": "light_app.light",
+        "pk": 2,
         "fields": {
-            "name": "Outdoor Spaces(e.g.,Patio,Porch)",
-            "user": 2
+            "name": "Ceiling Light",
+            "room": 1,
+            "description": "The main light source for the living room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 3,
+        "fields": {
+            "name": "Wall Lamp",
+            "room": 1,
+            "description": "Ambient lighting from the walls.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 4,
+        "fields": {
+            "name": "Floor Lamp",
+            "room": 1,
+            "description": "Used for localized lighting in the living room.",
+            "state": 1,
+            "choices": []
         }
     },
     {
         "model": "light_app.light",
         "pk": 5,
         "fields": {
-            "name": "Ceiling Light",
-            "room": 4,
-            "description": "Provides general illumination for the entire room.",
-            "state": 2,
+            "name": "Table Lamp",
+            "room": 1,
+            "description": "Small lamp placed on side tables.",
+            "state": 1,
             "choices": []
         }
     },
@@ -92,10 +114,10 @@
         "model": "light_app.light",
         "pk": 6,
         "fields": {
-            "name": "Chandelier",
-            "room": 4,
-            "description": "Often a decorative centerpiece, hanging from the ceiling",
-            "state": 2,
+            "name": "Recessed Ceiling Lights",
+            "room": 1,
+            "description": "Discrete ceiling lights for the living room.",
+            "state": 1,
             "choices": []
         }
     },
@@ -103,10 +125,10 @@
         "model": "light_app.light",
         "pk": 7,
         "fields": {
-            "name": "Floor Lamp",
-            "room": 4,
-            "description": "A tall lamp that stands on the floor, usually used for ambient lighting.",
-            "state": 2,
+            "name": "Track Lighting",
+            "room": 1,
+            "description": "Adjustable lighting for the living room.",
+            "state": 1,
             "choices": []
         }
     },
@@ -114,10 +136,10 @@
         "model": "light_app.light",
         "pk": 8,
         "fields": {
-            "name": "Table Lamp",
-            "room": 4,
-            "description": "A smaller lamp placed on tables or sideboards for localized lighting.",
-            "state": 2,
+            "name": "Overhead Light",
+            "room": 2,
+            "description": "Main light for the kitchen.",
+            "state": 1,
             "choices": []
         }
     },
@@ -125,10 +147,10 @@
         "model": "light_app.light",
         "pk": 9,
         "fields": {
-            "name": "Wall Sconce",
-            "room": 4,
-            "description": "A light fixture mounted on the wall, adding both ambiance and style.",
-            "state": 2,
+            "name": "Pendant Lights",
+            "room": 2,
+            "description": "Hanging lights over the kitchen island.",
+            "state": 1,
             "choices": []
         }
     },
@@ -136,10 +158,10 @@
         "model": "light_app.light",
         "pk": 10,
         "fields": {
-            "name": "Recessed Lighting",
-            "room": 4,
-            "description": "Lights that are embedded into the ceiling for a sleek, modern look.",
-            "state": 2,
+            "name": "Under-Cabinet Lighting",
+            "room": 2,
+            "description": "Lights under kitchen cabinets for countertop illumination.",
+            "state": 1,
             "choices": []
         }
     },
@@ -147,10 +169,10 @@
         "model": "light_app.light",
         "pk": 11,
         "fields": {
-            "name": "Track Lighting",
-            "room": 4,
-            "description": "Adjustable lights mounted on a track, offering flexible lighting options.",
-            "state": 2,
+            "name": "Ceiling Fan Light",
+            "room": 2,
+            "description": "A ceiling fan with built-in lighting.",
+            "state": 1,
             "choices": []
         }
     },
@@ -158,10 +180,10 @@
         "model": "light_app.light",
         "pk": 12,
         "fields": {
-            "name": "Accent Lighting",
-            "room": 4,
-            "description": "Used to highlight specific features or decorations in the room.",
-            "state": 2,
+            "name": "Recessed Lights",
+            "room": 2,
+            "description": "Built-in ceiling lights for the kitchen.",
+            "state": 1,
             "choices": []
         }
     },
@@ -169,9 +191,9 @@
         "model": "light_app.light",
         "pk": 13,
         "fields": {
-            "name": "Overhead Ceiling Light",
+            "name": "Track Lighting",
             "room": 2,
-            "description": "The primary light source for the kitchen, often centrally located.",
+            "description": "Adjustable kitchen lighting.",
             "state": 1,
             "choices": []
         }
@@ -180,10 +202,10 @@
         "model": "light_app.light",
         "pk": 14,
         "fields": {
-            "name": "Pendant Lights",
+            "name": "Range Hood Light",
             "room": 2,
-            "description": "Hanging lights over a kitchen island or dining table.",
-            "state": 2,
+            "description": "Lighting built into the range hood.",
+            "state": 1,
             "choices": []
         }
     },
@@ -191,10 +213,10 @@
         "model": "light_app.light",
         "pk": 15,
         "fields": {
-            "name": "Under-Cabinet Lighting",
-            "room": 2,
-            "description": "Lights installed under kitchen cabinets to illuminate countertops.",
-            "state": 2,
+            "name": "Ceiling Light",
+            "room": 3,
+            "description": "Main ceiling light for the bedroom.",
+            "state": 1,
             "choices": []
         }
     },
@@ -202,10 +224,10 @@
         "model": "light_app.light",
         "pk": 16,
         "fields": {
-            "name": "Recessed Ceiling Lights",
-            "room": 2,
-            "description": "Discreet lights built into the ceiling.",
-            "state": 2,
+            "name": "Bedside Lamp",
+            "room": 3,
+            "description": "A lamp placed next to the bed for reading.",
+            "state": 1,
             "choices": []
         }
     },
@@ -213,10 +235,10 @@
         "model": "light_app.light",
         "pk": 17,
         "fields": {
-            "name": "Track Lighting",
-            "room": 2,
-            "description": "Adjustable lighting for illuminating different areas of the kitchen.",
-            "state": 2,
+            "name": "Floor Lamp",
+            "room": 3,
+            "description": "A tall lamp placed near the bed.",
+            "state": 1,
             "choices": []
         }
     },
@@ -224,10 +246,10 @@
         "model": "light_app.light",
         "pk": 18,
         "fields": {
-            "name": "Range Hood Lighting",
-            "room": 2,
-            "description": "Lights built into the range hood above the stove.",
-            "state": 2,
+            "name": "Recessed Ceiling Lights",
+            "room": 3,
+            "description": "Subtle ceiling lighting for the bedroom.",
+            "state": 1,
             "choices": []
         }
     },
@@ -235,10 +257,10 @@
         "model": "light_app.light",
         "pk": 19,
         "fields": {
-            "name": "Vanity Lights",
+            "name": "Wall Lamp",
             "room": 3,
-            "description": "Lights placed above or alongside bathroom mirrors.",
-            "state": 2,
+            "description": "Ambient lighting from the walls.",
+            "state": 1,
             "choices": []
         }
     },
@@ -246,10 +268,10 @@
         "model": "light_app.light",
         "pk": 20,
         "fields": {
-            "name": "Recessed Ceiling Lights",
+            "name": "Track Lighting",
             "room": 3,
-            "description": "Subtle lights embedded in the ceiling, often used in showers.",
-            "state": 2,
+            "description": "Adjustable lighting for the bedroom.",
+            "state": 1,
             "choices": []
         }
     },
@@ -257,10 +279,10 @@
         "model": "light_app.light",
         "pk": 21,
         "fields": {
-            "name": "Wall Sconces",
+            "name": "Accent Light",
             "room": 3,
-            "description": "Wall-mounted lights that add both function and style.",
-            "state": 2,
+            "description": "Used to highlight specific bedroom decorations.",
+            "state": 1,
             "choices": []
         }
     },
@@ -268,9 +290,9 @@
         "model": "light_app.light",
         "pk": 22,
         "fields": {
-            "name": "Overhead Ceiling Light",
-            "room": 3,
-            "description": "The main light source in the bathroom.",
+            "name": "Vanity Light",
+            "room": 4,
+            "description": "Light for bathroom mirrors.",
             "state": 1,
             "choices": []
         }
@@ -279,9 +301,284 @@
         "model": "light_app.light",
         "pk": 23,
         "fields": {
-            "name": "Mirror Lighting",
-            "room": 3,
-            "description": "Lights integrated into or around mirrors for better illumination.",
+            "name": "Overhead Light",
+            "room": 4,
+            "description": "Main ceiling light for the bathroom.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 24,
+        "fields": {
+            "name": "Shower Light",
+            "room": 4,
+            "description": "Specialized light for the shower area.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 25,
+        "fields": {
+            "name": "Recessed Ceiling Lights",
+            "room": 4,
+            "description": "Discrete ceiling lights for the bathroom.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 26,
+        "fields": {
+            "name": "Sconce Lights",
+            "room": 4,
+            "description": "Wall-mounted lights for style and function.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 27,
+        "fields": {
+            "name": "Ambient Light",
+            "room": 4,
+            "description": "Soft lighting for a calming bathroom atmosphere.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 28,
+        "fields": {
+            "name": "Chandelier",
+            "room": 5,
+            "description": "A decorative chandelier in the dining room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 29,
+        "fields": {
+            "name": "Ceiling Light",
+            "room": 5,
+            "description": "Main ceiling light for the dining room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 30,
+        "fields": {
+            "name": "Wall Sconce",
+            "room": 5,
+            "description": "Wall-mounted lighting for ambiance.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 31,
+        "fields": {
+            "name": "Floor Lamp",
+            "room": 5,
+            "description": "Used for localized lighting in the dining room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 32,
+        "fields": {
+            "name": "Track Lighting",
+            "room": 5,
+            "description": "Adjustable lighting for the dining room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 33,
+        "fields": {
+            "name": "Recessed Ceiling Lights",
+            "room": 5,
+            "description": "Subtle ceiling lighting for the dining room.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 34,
+        "fields": {
+            "name": "Table Lamp",
+            "room": 5,
+            "description": "Small lamp for added light on dining tables.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 35,
+        "fields": {
+            "name": "Desk Lamp",
+            "room": 6,
+            "description": "Used for task lighting on a desk.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 36,
+        "fields": {
+            "name": "Ceiling Light",
+            "room": 6,
+            "description": "Main ceiling light for the home office.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 37,
+        "fields": {
+            "name": "Track Lighting",
+            "room": 6,
+            "description": "Adjustable lighting for the home office.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 38,
+        "fields": {
+            "name": "Recessed Ceiling Lights",
+            "room": 6,
+            "description": "Subtle lighting for the home office.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 39,
+        "fields": {
+            "name": "Wall Lamp",
+            "room": 6,
+            "description": "Ambient lighting for the home office.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 40,
+        "fields": {
+            "name": "Floor Lamp",
+            "room": 6,
+            "description": "Used for localized lighting in the home office.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 41,
+        "fields": {
+            "name": "Accent Light",
+            "room": 6,
+            "description": "Accent lighting for highlighting decorations.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 42,
+        "fields": {
+            "name": "Outdoor Lamp",
+            "room": 7,
+            "description": "General lighting for outdoor spaces.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 43,
+        "fields": {
+            "name": "Pathway Light",
+            "room": 7,
+            "description": "Illuminates outdoor pathways.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 44,
+        "fields": {
+            "name": "Wall Lantern",
+            "room": 7,
+            "description": "Mounted lantern for outdoor walls.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 45,
+        "fields": {
+            "name": "Deck Lighting",
+            "room": 7,
+            "description": "Lighting for outdoor decks.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 46,
+        "fields": {
+            "name": "Flood Light",
+            "room": 7,
+            "description": "Bright light for security purposes.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 47,
+        "fields": {
+            "name": "String Lights",
+            "room": 7,
+            "description": "Decorative string lights for outdoor ambiance.",
+            "state": 1,
+            "choices": []
+        }
+    },
+    {
+        "model": "light_app.light",
+        "pk": 48,
+        "fields": {
+            "name": "Garden Light",
+            "room": 7,
+            "description": "Lighting for illuminating the garden.",
             "state": 1,
             "choices": []
         }

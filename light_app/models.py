@@ -89,6 +89,7 @@ class UserSettings(models.Model):
     two_factor_authentication = models.BooleanField(default=False)
     scheduled_lights = models.BooleanField(default=False)
     silence_mode = models.BooleanField(default=False)
+    test_mode = models.BooleanField(default=True)
     m5core2_ip = models.CharField(
         max_length=100, blank=True, default=""
     )  # Adresa IP a utilizatorului pentru M5Core2

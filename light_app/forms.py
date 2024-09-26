@@ -48,7 +48,7 @@ class UserSettingsForm(forms.ModelForm):
             "display_name", "email", "preferred_language", "timezone", 
             "theme", "font_size", "primary_color", "email_notifications", 
             "push_notifications", "two_factor_authentication", "scheduled_lights", 
-            "silence_mode", "m5core2_ip", 'server_check_interval',
+            "silence_mode","test_mode", "m5core2_ip", 'server_check_interval',
         ]
         widgets = {
             'display_name': forms.TextInput(attrs={

@@ -14,7 +14,5 @@ urlpatterns = [
     path("edit_light/<int:light_id>/", views.edit_light, name="edit_light"),
     path("delete_light/<int:light_id>/", views.delete_light, name="delete_light"),
     path('check_home_status/', views.check_home_status, name='check_home_status'),
-    path('status_response_for_esp32/', views.status_response_for_esp32, name='status_response_for_esp32'),
-    path('close-db-connections/', views.close_db_connections, name='close_db_connections'),
 
 ]

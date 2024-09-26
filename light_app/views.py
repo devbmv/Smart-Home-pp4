@@ -1,92 +1,38 @@
 import requests
 from django.core.paginator import Paginator
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import Room, Light, UserSettings
 from django.shortcuts import render, get_object_or_404, redirect
-from django.conf import settings  # Importăm setările
 from django.contrib.auth.decorators import login_required
-from .forms import RoomForm, LightForm, UserSettingsForm, UserUpdateForm, UserSettings
+from .forms import RoomForm, LightForm, UserSettingsForm, UserSettings
 from django.utils.translation import gettext as _
-from home_control_project.settings import debug,home_online_status,API_PASSWORD
-from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-import base64
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from time import sleep
-import threading
-from django.apps import AppConfig
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from home_control_project.settings import home_online_status
 from django.db import connections
 from django.http import JsonResponse
 import os
 from django.core.cache import cache
+from .context_processors import home_online_status
+from django.http import JsonResponse
+from django.core.cache import cache
+from django.contrib.auth.decorators import login_required
 
-# Variabile globale pentru controlul ping-ului
+user_id = False
 ping_active = True
-home_online=False
-
-SECRET_TOKEN = os.getenv("DJANGO_API_PASSWORD")  # Ensure to set this in your environment variables
-
-def close_db_connections(request):
-    token = request.GET.get('token', None)
-    if token != SECRET_TOKEN:
-        return JsonResponse({"status": "error", "message": "Unauthorized access."}, status=401)
-
-    try:
-        # Cachează momentul când închidem ultima dată conexiunile
-        last_closed = cache.get('last_db_connection_close')
-        if last_closed:
-            return JsonResponse({"status": "success", "message": "Connections were recently closed."})
-
-        # Close all database connections for all defined databases
-        for conn in connections.all():
-            conn.close()
-
-        # Setăm un timeout în cache pentru a nu închide conexiunile prea des
-        cache.set('last_db_connection_close', True, timeout=60)
-
-        return JsonResponse({"status": "success", "message": "All database connections have been closed."})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": str(e)})
 
 
-@csrf_exempt  # Dezactivează protecția CSRF pentru acest endpoint
-def status_response_for_esp32(request):
-    if request.method == "GET":
-        # Verificăm dacă există un header de autorizare (Basic Authentication)
-
-        auth_header = request.headers.get("Authorization")
-
-        if auth_header:
-            # Trimitem un răspuns simplu cu un mesaj de succes
-            response_data = {
-                "status": "success",
-                "message": "ESP32 successfully connected to Django server",
-            }
-            return JsonResponse(response_data, status=200)
-
-        else:
-            # Dacă nu există un header de autorizare, răspundem cu 401 Unauthorized
-            return JsonResponse({"error": "Unauthorized"}, status=401)
-    else:
-        return JsonResponse({"error": "Invalid request method"}, status=405)
+def home(request):
+    return render(request, "light_app/index.html")
 
 
-
+@login_required
 def check_home_status(request):
-    user_id = request.user.id if request.user.is_authenticated else None
-    if user_id in home_online_status:
-        status = home_online_status.get(user_id, False)
-    else:
-        status = None  # sau altă valoare implicită
-
-    home_online_status[user_id]
-    return JsonResponse({'home_online_status': status})
-
-
+    global home_online_status
+    user_id = request.user.id
+    return JsonResponse({
+        'home_online_status': home_online_status.get(user_id)
+    })
 # =============================================================================
 
 
@@ -114,17 +60,12 @@ def user_settings_view(request):
     )
 
 
-def home(request):
-    print(home_online_status)
-    return render(request, "light_app/index.html")
-
-
 # =============================================================================
 
 
 @login_required
 def room_list_view(request):
-    rooms = Room.objects.prefetch_related('lights').all()
+    rooms = Room.objects.prefetch_related("lights").all()
     paginator = Paginator(rooms, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -163,44 +104,56 @@ def lights_status(request):
 def toggle_light(request, room_name, light_name):
     room = get_object_or_404(Room, name=room_name, user=request.user)
     light = get_object_or_404(Light, room=room, name=light_name)
+    test_mode = UserSettings.objects.get_or_create(user=request.user)[0].test_mode
 
+    response = "Online"
     user_ip = request.user_ip
     if not user_ip or user_ip == "none":
-        #debug("No ESP32 IP configured for user.")
+        # debug("No ESP32 IP configured for user.")
         return JsonResponse({"error": "ESP32 IP not configured for user"}, status=400)
 
-    response_text = ""
     action = "off" if light.state == 1 else "on"
-
-    if user_ip:
-
-        try:
+    print(test_mode)
+    if not test_mode:
+        if user_ip:
             try:
-                #debug(f"Checking if ESP32 is online at IP: {user_ip}")
-                response = requests.get(f"http://{request.user_ip}", timeout=50)
-                if response.status_code == 200:
-                    home_online = True
-                    #debug(f"\nESP32 is online at IP: {user_ip}\n")
-            except requests.exceptions.RequestException as e:
-                home_online = False
-                #debug("Esp Server Offline")
-                response_text = f"Server offline: {e}"
+                try:
+                    # debug(f"Checking if ESP32 is online at IP: {user_ip}")
+                    response = requests.get(f"http://{request.user_ip}", timeout=50)
+                    if response.status_code == 200:
+                        cache.set(f"home_online_{user_id}", True, timeout=3600)
+                    else:
+                        cache.set(f"home_online_{user_id}", False, timeout=3600)
 
-            if home_online:
-                response = requests.get(
-                    f"http://{request.user_ip}/control_led",
-                    params={"room": room_name, "light": light_name, "action": action},
-                    timeout=30,
-                )
-                if response.ok:
-                    light.state = 1 if action == "on" else 2
-                    light.save()
-                    response_text = response.json()
-                else:
-                    response_text = "Failed to change light state on M5Core2 server."
-        except Exception as e:
-            response_text = f"Error: {e}"
+                except requests.exceptions.RequestException as e:
+                    home_online_status[user_id] = False
+                    # debug("Esp Server Offline")
+                    response_text = f"Server offline: {e}"
 
+                if home_online_status[user_id]:
+                    response = requests.get(
+                        f"http://{request.user_ip}/control_led",
+                        params={
+                            "room": room_name,
+                            "light": light_name,
+                            "action": action,
+                        },
+                        timeout=30,
+                    )
+                    if response.ok:
+                        light.state = 1 if action == "on" else 2
+                        light.save()
+                        response_text = response.json()
+                    else:
+                        response_text = (
+                            "Failed to change light state on M5Core2 server."
+                        )
+            except Exception as e:
+                response_text = f"Error: {e}"
+    else:
+        light.state = 1 if action == "on" else 2
+        light.save()
+        response_text=f"{light_name} in {room_name} is {action}"
     # Răspuns AJAX
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return JsonResponse(

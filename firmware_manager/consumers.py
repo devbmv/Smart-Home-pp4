@@ -1,40 +1,22 @@
+# light_app/consumers.py
 import json
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 
-class MyWebSocketConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()  # Acceptă conexiunea WebSocket
+class MyWebSocketConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        # Acceptăm conexiunea WebSocket
+        await self.accept()
 
-    def disconnect(self, close_code):
-        print('Client disconnected.')  # Afișează un mesaj la deconectare
+    async def disconnect(self, close_code):
+        # Acțiuni la deconectare
+        pass
 
-    def receive(self, text_data):
-        if text_data.startswith('{'):
-            # Încercăm să interpretăm textul ca JSON
-            try:
-                text_data_json = json.loads(text_data)
-                message = text_data_json.get('message', 'No message key found.')
+    async def receive(self, text_data):
+        # Primesc mesajul de la client
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
 
-                # Afișează mesajul primit în consola serverului
-                print(f'Message received (JSON): {message}')
-
-                # Trimite un răspuns înapoi clientului
-                self.send(text_data=json.dumps({
-                    'message': f'Received: {message}'
-                }))
-            except json.JSONDecodeError:
-                print('Invalid JSON received.')  # Gestionare erori pentru JSON
-                self.send(text_data=json.dumps({
-                    'error': 'Invalid JSON format.'
-                }))
-        else:
-            # Dacă nu este JSON, tratăm ca text simplu
-            message = text_data
-
-            # Afișează mesajul primit în consola serverului
-            print(f'Message received (text): {message}')
-
-            # Trimite un răspuns înapoi clientului
-            self.send(text_data=json.dumps({
-                'message': f'Received: {message}'
-            }))
+        # Trimit un răspuns înapoi la client
+        await self.send(text_data=json.dumps({
+            'message': f"Received : {message}"
+        }))

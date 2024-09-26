@@ -79,7 +79,7 @@
 
     {% if user.is_authenticated %}
     <span id="server-status" class="badge ms-3 {% if home_online_status %}bg-success{% else %}bg-danger{% endif %}">
-      {% if home_online_status %}
+      {% if  home_online_status  %}
           Home Online
       {% else %}
           Home Offline

@@ -322,27 +322,11 @@ void loop()
     static uint32_t serverTimer;
     static unsigned long lastReconnectAttempt = 0;
 
-    if (!webSocket.isConnected() && (millis() - lastReconnectAttempt > 10000))
-    { // 10 secunde între încercările de reconectare
-        Serial.println("WebSocket not connected. Trying to reconnect...");
-        webSocket.beginSSL(websocket_server.c_str(), websocket_port, websocket_path, rootCACertificate, "arduino");
-        lastReconnectAttempt = millis();
-    }
 
-    webSocket.loop();
 
     if ((millis() - serverTimer > (checkInterval == 0 ? 5000 : checkInterval)))
     {
-        IPAddress serverIP;
-        if (WiFi.hostByName(websocket_server.c_str(), serverIP))
-        {
-            Serial.print("WebSocket server IP: ");
-            Serial.println(serverIP);
-        }
-        else
-        {
-            Serial.println("Failed to resolve WebSocket server IP");
-        }
+      
 
         Serial.println("Attempting WebSocket connection to: wss://" + websocket_server + websocket_path);
         printVariables();
@@ -353,7 +337,6 @@ void loop()
        String message = "Hello from ESP32 at " + String(millis());
 
         // Trimite mesajul prin WebSocket
-        webSocket.sendTXT(message);
         update = false;
     }
     checkDjangoOnline();

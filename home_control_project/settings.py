@@ -12,6 +12,7 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import logging
 
 env_path = Path(__file__).resolve().parent / "env.py"
 if os.path.isfile("env.py"):
@@ -22,12 +23,11 @@ if os.path.isfile("env.py"):
 else:
     print("env.py not found. Skipping environment variable setup.")
 # Base directory for the project
-home_online_status = {}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "False"
+DEBUG = os.getenv("DEBUG")=="True"
 API_USERNAME = os.getenv("DJANGO_API_USERNAME")
 API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
@@ -48,7 +48,12 @@ except json.JSONDecodeError:
     print("Invalid ALLOWED_HOSTS format, defaulting to empty list.")
 
 try:
-    CSRF_TRUSTED_ORIGINS = json.loads(os.getenv("CSRF_TRUSTED_ORIGINS", '["https://home-control-dbba5bec072c.herokuapp.com"]'))
+    CSRF_TRUSTED_ORIGINS = json.loads(
+        os.getenv(
+            "CSRF_TRUSTED_ORIGINS",
+            '["https://home-control-dbba5bec072c.herokuapp.com"]',
+        )
+    )
     CORS_ALLOW_ALL_ORIGINS = True
 
 except json.JSONDecodeError:
@@ -77,7 +82,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "light_app",
     "firmware_manager",
-    'debug_toolbar',
+    "debug_toolbar",
     "channels",
 ]
 SITE_ID = 1
@@ -86,7 +91,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 # Channel layers for real-time communication (WebSockets)
-ASGI_APPLICATION = "home_control_project.asgi.application"
+ASGI_APPLICATION = "home_control_project.asgi.application"  # Înlocuiește cu numele proiectului tău
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -117,7 +122,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "light_app.middleware.UserSettingsMiddleware",
     "light_app.middleware.UserLanguageMiddleware",
@@ -133,38 +138,30 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "light_app.context_processors.home_status_processor",  # Calea către funcția context processor
-                "firmware_manager.context_processors.user_ip_processor",  # Adaugă aici context processor-ul tău
+                "firmware_manager.context_processors.user_ip_processor", 
+                'light_app.context_processors.global_variables',
             ],
         },
     },
 ]
 
 
-
 # WSGI application
 WSGI_APPLICATION = "home_control_project.wsgi.application"
 
-
-if os.getenv('DATABASE_URL'):
-    # Dacă ai variabila DATABASE_URL, folosește PostgreSQL (sau alta specificată)
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    # Dacă nu ai DATABASE_URL, folosește SQLite local
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
-
+print("DEBUG:", DEBUG)
+print("DATABASES:", DATABASES)
 
 CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 
@@ -211,8 +208,60 @@ else:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Primary key field type
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Salvează sesiunile în baza de date
+# Durata de viață a sesiunii în secunde (de exemplu, 2 săptămâni)
+SESSION_COOKIE_AGE = 1209600  # 2 săptămâni
+
+# Asigură-te că sesiunea nu expiră la închiderea browserului
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+CSRF_COOKIE_AGE = 31449600  # 1 an
+
+# Asigură-te că Django salvează sesiunea la fiecare cerere, chiar dacă nu este modificată
+SESSION_SAVE_EVERY_REQUEST = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-WHITENOISE_SKIP_COMPRESS_EXTENSIONS = {'js'}
-django_heroku.settings(locals())
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = {"js"}
+if "DYNO" in os.environ:  # Dacă rulezi pe Heroku (sau altă platformă cu variabila DYNO)
+    django_heroku.settings(locals())
+    SESSION_COOKIE_SECURE = True  # Asigură-te că aceste cookie-uri sunt trimise doar prin HTTPS
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True  # Redirecționează automat HTTP -> HTTPS în producție
+    SECURE_HSTS_SECONDS = 31536000  # Activează HSTS pentru un an
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+else:
+    SESSION_COOKIE_SECURE = False  # În dezvoltare locală fără HTTPS
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+
+# Setările proiectului continuă aici...
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,  # Păstrează loggerii existenți activi
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            # Logger personalizat pentru logurile tale
+            'my_custom_logger': {
+                'handlers': ['console'],
+                'level': 'DEBUG',  # Schimbă la INFO sau WARNING dacă vrei să filtrezi nivelul
+                'propagate': False,
+            },
+            # Logger pentru request-urile HTTP Django
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',  # INFO sau DEBUG pentru a afișa request-urile și alte informații
+                'propagate': True,
+            },
+            'django.request': {
+                'handlers': ['console'],
+                'level': 'DEBUG',  # DEBUG pentru a vedea toate request-urile și răspunsurile
+                'propagate': False,
+            },
+        },
+    }

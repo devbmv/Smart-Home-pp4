@@ -53,7 +53,7 @@
         const progressBar = document.querySelector('.progress-bar');
         const info = document.querySelector('.info');
         const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const webSocketUrl = `${protocol}://${window.location.host}/ws/socket-server/`;
+        const webSocketUrl = `${protocol}://${window.location.host}/ws/goo/`;
         console.log(webSocketUrl);
         const socket = new WebSocket(webSocketUrl);
 
