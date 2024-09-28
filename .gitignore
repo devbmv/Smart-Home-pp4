@@ -1,3 +1,65 @@
-env_smart_pp4.py
-venv
+# Fișiere Python
+*.py[cod]
+__pycache__/
+*.so
+
+# Fișiere Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Fișiere Django specific
+db.sqlite3
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+
+# Fișiere statice și media (upload-uri, fișiere generate)
+static/
+media/
+
+# Fișiere de cache
+*.migrations/
+*.swp
+*.swo
+*~
+
+# Fișiere VSCode specific
+.vscode/
+
+# Fișiere de configurare locale
+.env
+.env.*
+
+# Fișiere de compilare
+*.DS_Store
+*.sass-cache/
+*.cache/
+*.coverage
+*.coveragerc
+.npm/
+node_modules/
+bower_components/
+
+# Fișierele create de Heroku
+Procfile
+runtime.txt
+
+# Fișiere pentru testing
+.tox/
+.pytest_cache/
+
+# Fișiere JetBrains specific (PyCharm etc.)
+.idea/
+
+# Fișiere pentru deployment (de exemplu, platformio)
+platformio/
 env.py

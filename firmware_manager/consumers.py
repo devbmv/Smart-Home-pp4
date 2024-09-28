@@ -1,6 +1,8 @@
-# light_app/consumers.py
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+import logging
+
+logger = logging.getLogger('my_custom_logger')
 
 class MyWebSocketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -14,9 +16,10 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         # Primesc mesajul de la client
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message = text_data_json.get("message")  # Folosim cheia corectă "message"
+        logger.debug(f"Mesaj primit: {text_data_json}")
 
         # Trimit un răspuns înapoi la client
         await self.send(text_data=json.dumps({
-            'message': f"Received : {message}"
+            'message': f"Received: {message}"
         }))

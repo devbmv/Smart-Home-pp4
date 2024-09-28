@@ -8,9 +8,9 @@ import time
 from django.utils import timezone
 import logging
 logger = logging.getLogger('my_custom_logger')
-
+update=True
 def start_permanent_task():
-    global home_online_status
+    global home_online_status,update
     while True:
         active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
         if active_sessions.exists():
@@ -19,8 +19,16 @@ def start_permanent_task():
                 user_id = user.id
                 try:
                     user_settings = UserSettings.objects.get(user=user)
-                    current_status = home_online_status.get(user_id, False)
-                    home_online_status[user_id] = not current_status
+                    if user_settings.test_mode:
+                            
+                        current_status = home_online_status.get(user_id, False)
+                        home_online_status[user_id] = not current_status
+                        update=True
+                    else:
+                        if update:
+                            home_online_status[user_id] = False
+                            update=False
+
                 except UserSettings.DoesNotExist:
                     # Dacă utilizatorul nu are setări, continuăm cu următorul
                     continue

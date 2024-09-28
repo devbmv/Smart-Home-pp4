@@ -1,7 +1,7 @@
 from light_app.models import UserSettings, User
 
 # Dicționar global pentru a stoca starea online a fiecărui utilizator
-home_online_status = {1: True}  # Folosim valori booleane True/False
+home_online_status = {1: False}  # Folosim valori booleane True/False
 
 # Context Processor pentru a adăuga variabile globale la template
 def global_variables(request):

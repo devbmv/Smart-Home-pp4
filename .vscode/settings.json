@@ -1,8 +1,18 @@
 {
-    "python.formatting.provider": "black",
-    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",  // Folosește Black pentru formatarea automată
+    "editor.formatOnSave": true,            // Activează formatarea automată la salvare
     "python.formatting.blackArgs": [
-        "--line-length", "88"
+        "--line-length", "88"               // Setează lungimea maximă a liniei la 88 caractere
     ],
-    "python.pythonPath": "venv\\Scripts\\python.exe"
+    "python.linting.enabled": true,         // Activează linting-ul
+    "python.linting.pylintEnabled": true,   // Activează pylint pentru a verifica stilul și erorile
+    "python.linting.flake8Enabled": true,   // Activează flake8 pentru verificări suplimentare PEP 8
+    "python.linting.pylintArgs": [
+        "--max-line-length=88"              // Setează pylint să respecte lungimea liniei de 88
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length=88"              // Setează flake8 să respecte lungimea liniei de 88
+    ],
+    "python.pythonPath": "venv\\Scripts\\python.exe",  // Setează calea către mediul virtual
+    "editor.rulers": [79]                   // Adaugă o linie verticală la 79 caractere
 }

@@ -241,7 +241,6 @@ else:
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 
-# Setările proiectului continuă aici...
 
     LOGGING = {
         'version': 1,
