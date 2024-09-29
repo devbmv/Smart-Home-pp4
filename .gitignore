@@ -23,8 +23,6 @@ db.sqlite3
 *.egg
 
 # Fișiere statice și media (upload-uri, fișiere generate)
-static/
-media/
 
 # Fișiere de cache
 *.migrations/
@@ -50,8 +48,6 @@ node_modules/
 bower_components/
 
 # Fișierele create de Heroku
-Procfile
-runtime.txt
 
 # Fișiere pentru testing
 .tox/

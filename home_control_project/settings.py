@@ -24,7 +24,7 @@ else:
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG")=="False"
+DEBUG = os.getenv("DEBUG")=="True"
 API_USERNAME = os.getenv("DJANGO_API_USERNAME")
 API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
@@ -90,11 +90,22 @@ LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 # Channel layers for real-time communication (WebSockets)
 ASGI_APPLICATION = "home_control_project.asgi.application"  # Înlocuiește cu numele proiectului tău
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#     },
+# }
+# settings.py
+
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL", "redis://127.0.0.1:6379")],
+        },
     },
 }
+
 
 
 # Authentication settings
@@ -208,8 +219,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 if DEBUG:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 else:
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Primary key field type
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Salvează sesiunile în baza de date
