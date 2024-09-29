@@ -6,6 +6,9 @@ import django_heroku
 from django.utils.translation import gettext_lazy as _
 import json
 import sys
+from pathlib import Path
+import os
+import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -29,7 +32,6 @@ API_USERNAME = os.getenv("DJANGO_API_USERNAME")
 API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'home_control_project.settings')
 
 
 def debug(data):
@@ -78,10 +80,10 @@ INSTALLED_APPS = [
     "django_summernote",
     "django_resized",
     "django_extensions",
-    "firmware_manager",
-    "channels",
     "light_app",
+    "firmware_manager",
     "debug_toolbar",
+    "channels",
 ]
 SITE_ID = 1
 
@@ -90,22 +92,11 @@ LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 # Channel layers for real-time communication (WebSockets)
 ASGI_APPLICATION = "home_control_project.asgi.application"  # Înlocuiește cu numele proiectului tău
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer",
-#     },
-# }
-# settings.py
-
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.getenv("REDIS_URL", "redis://127.0.0.1:6379")],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
-
 
 
 # Authentication settings
@@ -124,7 +115,7 @@ MESSAGE_TAGS = {
 # Middleware configuration
 MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.middleware.security.SecurityMiddleware",
+    # "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -217,10 +208,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 if DEBUG:
-    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 else:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 
 # Primary key field type
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Salvează sesiunile în baza de date
@@ -249,6 +241,7 @@ else:
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 
+# Setările proiectului continuă aici...
 
     LOGGING = {
         'version': 1,
