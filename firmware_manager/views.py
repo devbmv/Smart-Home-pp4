@@ -4,6 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import os
 from django.conf import settings
+import logging
+logger = logging.getLogger('my_custom_logger')
+
+from .signals import message_received
+from django.dispatch import receiver
+
 
 
 @csrf_exempt
@@ -15,6 +21,16 @@ def update_esp_firmware(request):
 def chatHome(request):
     # Renders the HTML page where the user can upload firmware
     return render(request, "firmware_manager/chat.html")
+
+@receiver(message_received)
+def handle_message(sender, **kwargs):
+    message = kwargs.get("message")
+    if message == "home":
+        logger.debug("Primit home")
+        chatHome()
+        
+    # Aici poți face ceva în funcție de mesajul primit
+    print(f"Mesajul primit în alt fișier: {message}")
 
 
 @csrf_exempt

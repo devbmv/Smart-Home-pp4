@@ -7,8 +7,6 @@ from django.utils.translation import gettext_lazy as _
 import json
 import sys
 from pathlib import Path
-import os
-import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -32,6 +30,7 @@ API_USERNAME = os.getenv("DJANGO_API_USERNAME")
 API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'home_control_project.settings')
 
 
 def debug(data):
@@ -80,10 +79,10 @@ INSTALLED_APPS = [
     "django_summernote",
     "django_resized",
     "django_extensions",
-    "light_app",
     "firmware_manager",
-    "debug_toolbar",
     "channels",
+    "light_app",
+    "debug_toolbar",
 ]
 SITE_ID = 1
 
