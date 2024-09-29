@@ -6,7 +6,6 @@ import django_heroku
 from django.utils.translation import gettext_lazy as _
 import json
 import sys
-from pathlib import Path
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
