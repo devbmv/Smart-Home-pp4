@@ -1,7 +1,5 @@
-Django>=3.2,<4.0
 django-allauth>=0.63.6
-cloudinary>=1.41.0
-django-cloudinary-storage>=0.3.0
+cloudinary==1.36.0
 django-crispy-forms>=2.0
 crispy-bootstrap5>=0.7
 django-summernote>=0.8.20.0
@@ -13,11 +11,21 @@ channels-redis>=4.0.0  # Adds Redis support for Channels
 requests>=2.32.3
 psycopg2>=2.9.9
 whitenoise>=5.0
-django-heroku>=0.3.1
 dj-database-url>=2.2.0
-gunicorn>=23.0.0
 pillow>=10.4.0
 daphne>=4.1.2
 PyJWT>=2.9.0
 redis>=5.0.0  # Redis server connection
-django-cloudinary-storage
+asgiref==3.7.2
+gunicorn==20.1.0
+dj3-cloudinary-storage==0.0.6
+Django==4.2.9
+django-allauth==0.57.0
+django-crispy-forms==2.1
+django-summernote==0.8.20.0
+gunicorn==20.1.0
+oauthlib==3.2.2
+python3-openid==3.2.0
+requests-oauthlib==1.3.1
+sqlparse==0.4.4
+urllib3==1.26.18

@@ -2,6 +2,19 @@ from pathlib import Path
 import os
 import dj_database_url
 from django.contrib.messages import constants as messages
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+# Verifică dacă variabila de mediu CLOUDINARY_URL este definită
+CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
+if not CLOUDINARY_URL:
+    raise ValueError("Cloudinary configuration is missing or incorrect.")
+
+# Verifică dacă variabila de mediu CLOUDINARY_URL este definită
+CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
+if not CLOUDINARY_URL:
+    raise ValueError("Cloudinary configuration is missing or incorrect.")
 if os.path.isfile('env.py'):
     import env
 
@@ -11,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['*.herokuapp.com',
-                 '192.168.1.15', '192.168.1.7', '86.45.36.88']
+ALLOWED_HOSTS = ['.herokuapp.com',
+                 '192.168.1.15', '192.168.1.7', '86.45.36.88', 'home-control-dbba5bec072c.herokuapp.com']
 
 
 API_USERNAME = os.getenv("DJANGO_API_USERNAME")
@@ -111,7 +124,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "home_control_project.wsgi.application"
 
 
-
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
@@ -129,14 +141,11 @@ else:
 CSRF_TRUSTED_ORIGINS = [
     "https://*.gitpod.io",
     "https://*.heroku.com",
-    "https://*192.168.1.15",
-    "https://*192.168.1.7",
-    "https://*86.45.36.88",
-    
-    
+    "https://192.168.1.15",
+    "https://192.168.1.7",
+    "https://86.45.36.88",
 ]
 
-CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
