@@ -9,7 +9,7 @@
         {% for room in page_obj %}
 
         <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-          <div class="card h-100 " id="light-{{ light.name }}">
+          <div class="card h-100 " id="light-{{ room.name }}-{{ light.name }}">
             <div class="card-body">
               <div class="image-container">
                 <div class="image-flash">
@@ -18,7 +18,7 @@
               </div>
               <ul class="list-group">
                 {% for light in room.lights.all %}
-                <li id="light-{{ light.name }}"
+                <li id="light-{{ room.name }}-{{ light.name }}"
                   class="list-group-item d-flex justify-content-between align-items-center {% if light.get_state_display == 'on' %}light-on{% else %}light-off{% endif %} ">
                   <div class="d-flex align-items-center ">
                     {% if user.is_authenticated %}
@@ -36,7 +36,7 @@
                     data-light-name="{{ light.name }}" data-room-name="{{ room.name }}">
                     {% csrf_token %}
                     <label class="switch">
-                      <input type="checkbox" name="light_state" id="light-{{ light.name }}" class="toggle-light-btn"
+                      <input type="checkbox" name="light_state" id="toggle-light-{{ room.name }}-{{ light.name }}" class="toggle-light-btn"
                         {%if light.get_state_display == 'on' %}checked{% endif %}>
                       <span class="slider round"></span>
                     </label>
@@ -115,11 +115,6 @@
   </div>
 </div>
 
-
-
-
-
-
 <script>
   function closeModal() {
     const modal = document.getElementById('autoCloseModal');
@@ -149,9 +144,8 @@
             })
             .then(response => {
               if (!response.ok) {
-                  // Extragem mesajul de eroare ca text
                   return response.text().then(errorText => {
-                  throw new Error(errorText); // Aruncăm eroarea cu mesajul din răspuns
+                  throw new Error(errorText);
                   });
               }
               return response.json(); // Dacă răspunsul este OK, returnăm JSON-ul
@@ -160,21 +154,20 @@
                 let stateText = data.state === "on" ? "turned on" : "turned off";
                 let message = `Light ${lightName} in ${roomName} was ${stateText}`;
 
-                // Actualizează mesajul modalului
                 document.getElementById('modalMessage').textContent = message;
                 infoModal.style.display = 'block';
 
-                const card = document.getElementById(`light-${lightName}`);
+                const card = document.getElementById(`light-${roomName}-${lightName}`);
                 const checkbox = form.querySelector('.toggle-light-btn');
 
                 if (data.state === "on") {
                     card.classList.remove('light-off');
                     card.classList.add('light-on');
-                    checkbox.checked = true;  // Marchează checkbox-ul ca bifat
+                    checkbox.checked = true;
                 } else {
                     card.classList.remove('light-on');
                     card.classList.add('light-off');
-                    checkbox.checked = false; // Debifează checkbox-ul
+                    checkbox.checked = false;
                 }
 
             })
@@ -182,8 +175,6 @@
                 console.error('Error:', error);
                 document.getElementById('modalMessage').textContent = `Error: ${error.message}`;
                 infoModal.style.display = 'block';
-
-                // Păstrează modalul deschis mai mult timp dacă există o eroare pentru a permite utilizatorului să o citească
             });
             setTimeout(closeModal, 3000);
         });

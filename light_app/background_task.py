@@ -15,6 +15,7 @@ response_text = ""
 count = 0
 lock = threading.Lock()
 
+
 def start_permanent_task():
     global home_online_status, update, response_text, count
     while True:
@@ -28,13 +29,14 @@ def start_permanent_task():
                     user_settings = UserSettings.objects.get(user=user)
                     if user_settings.test_mode:
                         with lock:
-                            current_status = home_online_status.get(user_id, False)
+                            current_status = home_online_status.get(
+                                user_id, False)
                             home_online_status[user_id] = not current_status
                         update = True
                     else:
                         try:
                             response = requests.get(
-                                f"http://{user_settings.m5core2_ip}?check_interval={user_settings.server_check_interval}", timeout=5)
+                                f"http://{user_settings.m5core2_ip}?check_interval={user_settings.server_check_interval}", timeout=30)
                             if response.status_code == 200:
                                 count += 1
                                 debug(f"home_online {count}")
@@ -61,6 +63,8 @@ def start_permanent_task():
             sleep(10)
 
 # Funcția pentru a porni thread-ul separat
+
+
 def start_background_task():
     task_thread = threading.Thread(target=start_permanent_task)
     task_thread.daemon = True  # Oprește thread-ul când se oprește programul principal

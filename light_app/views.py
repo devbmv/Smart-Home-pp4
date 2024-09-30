@@ -120,7 +120,7 @@ def toggle_light(request, room_name, light_name):
         try:
             try:
                 #debug(f"Checking if ESP32 is online at IP: {user_ip}")
-                response = requests.get(f"http://{request.user_ip}", timeout=50)
+                response = requests.get(f"http://{request.user_ip}", timeout=30)
                 if response.status_code == 200:
                     home_online = True
                     #debug(f"\nESP32 is online at IP: {user_ip}\n")

@@ -6,15 +6,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# Verifică dacă variabila de mediu CLOUDINARY_URL este definită
-CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
-if not CLOUDINARY_URL:
-    raise ValueError("Cloudinary configuration is missing or incorrect.")
-
-# Verifică dacă variabila de mediu CLOUDINARY_URL este definită
-CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
-if not CLOUDINARY_URL:
-    raise ValueError("Cloudinary configuration is missing or incorrect.")
+# Verifică dacă fișierul 'env.py' există și încarcă variabilele de mediu
 if os.path.isfile('env.py'):
     import env
 
@@ -23,14 +15,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['.herokuapp.com',
-                 '192.168.1.15', '192.168.1.7', '86.45.36.88', 'home-control-dbba5bec072c.herokuapp.com']
-
+DEBUG = os.getenv("DEBUG", "False") == "False"
+ALLOWED_HOSTS = ['.herokuapp.com', '192.168.1.15', "127.0.0.1", '192.168.1.7', '86.45.36.88', 'home-control-dbba5bec072c.herokuapp.com']
 
 API_USERNAME = os.getenv("DJANGO_API_USERNAME")
 API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
-
 
 # Installed applications
 INSTALLED_APPS = [
@@ -61,7 +50,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# messages for users
+# Messages for users
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-secondary',
     messages.INFO: 'alert-info',
@@ -70,13 +59,9 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-
-# Înlocuiește cu numele proiectului tău
+# Channels configuration
 ASGI_APPLICATION = "home_control_project.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
@@ -86,7 +71,7 @@ CHANNEL_LAYERS = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Adaugă Whitenoise pentru producție
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -120,35 +105,55 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = "home_control_project.wsgi.application"
 
-
+# DATABASE CONFIGURATION
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-    }
-else:
+if DEBUG or not DATABASE_URL:
+    # Folosește SQLite când `DEBUG` este activat
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+else:
+    # Folosește Postgres pentru producție (Heroku)
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
 
+# STATIC AND MEDIA FILES CONFIGURATION
+if DEBUG:
+    # Pe dezvoltare, servește fișierele local
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+else:
+    # Pe producție, folosește Whitenoise și Cloudinary
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # Whitenoise pentru producție
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    MEDIA_URL = '/media/'
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# CSRF configuration for trusted origins
 CSRF_TRUSTED_ORIGINS = [
     "https://*.gitpod.io",
     "https://*.heroku.com",
     "https://192.168.1.15",
     "https://192.168.1.7",
     "https://86.45.36.88",
-    "https://home-control-dbba5bec072c.herokuapp.com",  # Adaugă domeniul tău Heroku
+    "https://home-control-dbba5bec072c.herokuapp.com",
 ]
 
-
-
+# Authentication password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -164,32 +169,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Crispy Forms configuration
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# django_summernote config
+# Summernote configuration
 SUMMERNOTE_CONFIG = {
     'summernote': {
-        # Change editor size
         'width': '100%',
         'height': '480px',
-
         'fontNames': ['Lato', 'Sans Serif'],
         'fontNamesIgnoreCheck': ['Lato', 'Sans Serif'],
         'fontsizes': ['18'],
         'fontSizeUnits': ['px'],
-
         'disableResizeEditor': True,
     },
 }
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
