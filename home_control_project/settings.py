@@ -206,7 +206,7 @@ if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 else:
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Primary key field type
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Salvează sesiunile în baza de date
