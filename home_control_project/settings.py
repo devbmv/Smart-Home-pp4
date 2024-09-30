@@ -144,7 +144,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://192.168.1.15",
     "https://192.168.1.7",
     "https://86.45.36.88",
+    "https://home-control-dbba5bec072c.herokuapp.com",  # Adaugă domeniul tău Heroku
 ]
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
