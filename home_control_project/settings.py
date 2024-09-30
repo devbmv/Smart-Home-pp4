@@ -140,6 +140,7 @@ TEMPLATES = [
         },
     },
 ]
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 # WSGI application
