@@ -1,20 +1,22 @@
-from pathlib import Path
 import os
+from pathlib import Path
 import dj_database_url
 from django.contrib.messages import constants as messages
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import django_heroku
+
 
 # Verifică dacă fișierul 'env.py' există și încarcă variabilele de mediu
-if os.path.isfile('env.py'):
+if os.path.isfile(os.path.join(Path(__file__).resolve().parent.parent, "env.py")):
     import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-SECRET_KEY = os.environ.get("SECRET_KEY")
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['.herokuapp.com', '192.168.1.15', "127.0.0.1", '192.168.1.7', '86.45.36.88', 'home-control-dbba5bec072c.herokuapp.com']
 
@@ -28,27 +30,28 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.staticfiles",
     "cloudinary_storage",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "django.contrib.staticfiles",
-    "cloudinary",
-    "allauth.socialaccount.providers.google",
     "crispy_forms",
     "crispy_bootstrap5",
     "django_summernote",
+    "cloudinary",
     "django_resized",
-    "django_extensions",
     "light_app",
     "firmware_manager",
     "channels",
+    "django_extensions",
 ]
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
+# Crispy Forms configuration
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Messages for users
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-secondary',
@@ -119,30 +122,31 @@ if DEBUG or not DATABASE_URL:
 else:
     # Folosește Postgres pentru producție (Heroku)
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
+        'default': dj_database_url.config(DATABASE_URL)
     }
+CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 
 # STATIC AND MEDIA FILES CONFIGURATION
 if DEBUG:
-    # Pe dezvoltare, servește fișierele local
+    # Development settings
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'  # Stochează fișierele local
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
-    # Pe producție, folosește Whitenoise și Cloudinary
+    # Production settings
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
     MEDIA_URL = '/media/'
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # CSRF configuration for trusted origins
 CSRF_TRUSTED_ORIGINS = [
     "https://*.gitpod.io",
@@ -169,9 +173,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Crispy Forms configuration
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 
 # Summernote configuration
 SUMMERNOTE_CONFIG = {
@@ -188,3 +190,4 @@ SUMMERNOTE_CONFIG = {
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+django_heroku.settings(locals())
