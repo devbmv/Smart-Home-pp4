@@ -126,7 +126,7 @@ else:
 if DEBUG:
     # Pe dezvoltare, servește fișierele local
     STATIC_URL = '/static/'
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # Servește fișierele static în mod local
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'  # Stochează fișierele local
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
@@ -136,7 +136,7 @@ if DEBUG:
 else:
     # Pe producție, folosește Whitenoise și Cloudinary
     STATIC_URL = '/static/'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # Whitenoise pentru producție
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
