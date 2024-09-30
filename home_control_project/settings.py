@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "django_extensions",
     "light_app",
     "firmware_manager",
-    "debug_toolbar",
     "channels",
 ]
 SITE_ID = 1
@@ -78,7 +77,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "light_app.middleware.UserSettingsMiddleware",
     "light_app.middleware.UserLanguageMiddleware",
@@ -130,6 +128,7 @@ if DEBUG:
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # Servește fișierele static în mod local
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'  # Stochează fișierele local
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     MEDIA_URL = '/media/'
