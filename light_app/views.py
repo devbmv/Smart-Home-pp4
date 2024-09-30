@@ -17,6 +17,8 @@ from .context_processors import home_online_status
 from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
+from .context_processors import debug
+from django.utils.functional import SimpleLazyObject
 
 user_id = False
 ping_active = True
@@ -104,56 +106,44 @@ def lights_status(request):
 def toggle_light(request, room_name, light_name):
     room = get_object_or_404(Room, name=room_name, user=request.user)
     light = get_object_or_404(Light, room=room, name=light_name)
-    test_mode = UserSettings.objects.get_or_create(user=request.user)[0].test_mode
 
-    response = "Online"
     user_ip = request.user_ip
     if not user_ip or user_ip == "none":
-        # debug("No ESP32 IP configured for user.")
+        #debug("No ESP32 IP configured for user.")
         return JsonResponse({"error": "ESP32 IP not configured for user"}, status=400)
 
+    response_text = ""
     action = "off" if light.state == 1 else "on"
-    print(test_mode)
-    if not test_mode:
-        if user_ip:
+
+    if user_ip:
+
+        try:
             try:
-                try:
-                    # debug(f"Checking if ESP32 is online at IP: {user_ip}")
-                    response = requests.get(f"http://{request.user_ip}", timeout=50)
-                    if response.status_code == 200:
-                        cache.set(f"home_online_{user_id}", True, timeout=3600)
-                    else:
-                        cache.set(f"home_online_{user_id}", False, timeout=3600)
+                #debug(f"Checking if ESP32 is online at IP: {user_ip}")
+                response = requests.get(f"http://{request.user_ip}", timeout=50)
+                if response.status_code == 200:
+                    home_online = True
+                    #debug(f"\nESP32 is online at IP: {user_ip}\n")
+            except requests.exceptions.RequestException as e:
+                home_online = False
+                #debug("Esp Server Offline")
+                response_text = f"Server offline: {e}"
 
-                except requests.exceptions.RequestException as e:
-                    home_online_status[user_id] = False
-                    # debug("Esp Server Offline")
-                    response_text = f"Server offline: {e}"
+            if home_online:
+                response = requests.get(
+                    f"http://{request.user_ip}/control_led",
+                    params={"room": room_name, "light": light_name, "action": action},
+                    timeout=30,
+                )
+                if response.ok:
+                    light.state = 1 if action == "on" else 2
+                    light.save()
+                    response_text = response.json()
+                else:
+                    response_text = "Failed to change light state on M5Core2 server."
+        except Exception as e:
+            response_text = f"Error: {e}"
 
-                if home_online_status[user_id]:
-                    response = requests.get(
-                        f"http://{request.user_ip}/control_led",
-                        params={
-                            "room": room_name,
-                            "light": light_name,
-                            "action": action,
-                        },
-                        timeout=30,
-                    )
-                    if response.ok:
-                        light.state = 1 if action == "on" else 2
-                        light.save()
-                        response_text = response.json()
-                    else:
-                        response_text = (
-                            "Failed to change light state on M5Core2 server."
-                        )
-            except Exception as e:
-                response_text = f"Error: {e}"
-    else:
-        light.state = 1 if action == "on" else 2
-        light.save()
-        response_text=f"{light_name} in {room_name} is {action}"
     # Răspuns AJAX
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return JsonResponse(

@@ -1,7 +1,11 @@
 from light_app.models import UserSettings, User
-
+from home_control_project.settings import DEBUG
 # Dicționar global pentru a stoca starea online a fiecărui utilizator
 home_online_status = {1: False}  # Folosim valori booleane True/False
+
+def debug(data):
+    if DEBUG:
+        print(data)
 
 # Context Processor pentru a adăuga variabile globale la template
 def global_variables(request):

@@ -15,6 +15,8 @@ class UserSettingsMiddleware:
 
             request.session['theme'] = user_settings.theme
             request.session['font_size'] = user_settings.font_size
+            
+            request.user_settings = user_settings
 
             request.session['primary_color'] = user_settings.primary_color
             request.user_ip = user_settings.m5core2_ip if user_settings.m5core2_ip else 'none'

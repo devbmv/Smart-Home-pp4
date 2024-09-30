@@ -48,13 +48,81 @@
         </div>
     </div>
 
+
     <script>
-         const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+        const form = document.getElementById('uploadForm');
+        const progressBar = document.querySelector('.progress-bar');
+        const info = document.querySelector('.info');
+        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const webSocketUrl = `${protocol}://${window.location.host}/ws/goo/`;
     const socket = new WebSocket(webSocketUrl);
 
-    socket.onopen = function() {
-        console.log("Connected to WebSocket");
+
+    form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const request = new XMLHttpRequest();
+
+            request.open('POST', form.action, true);
+
+            request.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.textContent = percentComplete.toFixed(2) + '%';
+                    info.textContent = 'Uploading to Django: ' + percentComplete.toFixed(2) + '%';
+                }
+            };
+            request.onload = function () {
+                if (request.status === 200) {
+                    const response = JSON.parse(request.responseText);
+                    if (response.status === "uploaded_to_django") {
+                        info.textContent = 'Upload to Django complete. Now uploading to ESP32...';
+
+                        // Inițializează upload-ul către ESP32
+                        uploadToESP32();
+                    } else {
+                        info.textContent = 'Upload failed. Please try again.';
+                    }
+                } else {
+                    info.textContent = 'Upload failed. Please try again.';
+                }
+            };
+
+            request.send(formData);
+        });
+   
+        function uploadToESP32() {
+            const espRequest = new XMLHttpRequest();
+
+            espRequest.open('POST', '{% url "upload_to_esp32" %}', true);  // Folosirea DTL pentru generarea URL-ului
+
+            espRequest.onprogress = function (e) {
+                // Aceasta este etapa de upload către ESP32. Progresul aici ar trebui să fie mai lent, așa cum descrii.
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + '%';
+                    progressBar.textContent = 'ESP32 Upload: ' + percentComplete.toFixed(2) + '%';
+                    info.textContent = 'Uploading to ESP32: ' + percentComplete.toFixed(2) + '%';
+                }
+            };
+
+            espRequest.onload = function () {
+                if (espRequest.status === 200) {
+                    progressBar.style.width = '100%';
+                    progressBar.textContent = '100%';
+                    info.textContent = 'Upload complete to ESP32.';
+                } else {
+                    info.textContent = 'Failed to upload to ESP32.';
+                }
+            };
+
+            espRequest.send();  // Poți trimite date suplimentare aici dacă e necesar
+        }
+   
+   
+        socket.onopen = function() {
+        console.log("Connected to WebSocket Django");
         document.getElementById('messages').innerHTML += '<p>Connected</p>';
     };
 
@@ -70,38 +138,35 @@
         console.log("WebSocket closed");
         document.getElementById('messages').innerHTML += '<p>Disconnected</p>';
     };
-    const USER_ID = {{ user.id|default:"null" }};  // Asigură-te că variabila este definită cu ID-ul utilizatorului
+    const USER_ID = {{ user.id|default:"null" }}; 
 
-    // Funcția care trimite mesaje WebSocket
     function sendMessage() {
         let input = document.getElementById('message');
-        const messageContent = input.value.split(' ');  // Ex: "get test_mode"
+        const messageContent = input.value.split(' '); 
 
         if (messageContent.length === 2) {
-            const action = messageContent[0];  // Ex: "get" sau "set"
-            const attribute_name = messageContent[1];  // Ex: "test_mode"
+            const action = messageContent[0];  
+            const attribute_name = messageContent[1]; 
 
-            // Trimitem comanda către WebSocket
             socket.send(JSON.stringify({
                 'action': action,
                 'attribute_name': attribute_name,
-                'user_id': USER_ID  // Asigură-te că USER_ID este corect definit
+                'user_id': USER_ID 
             }));
         } else if (messageContent.length === 3 && messageContent[0] === "set") {
-            const action = messageContent[0];  // Ex: "set"
-            const attribute_name = messageContent[1];  // Ex: "test_mode"
-            const value = messageContent[2];  // Ex: "True"
+            const action = messageContent[0]; 
+            const attribute_name = messageContent[1]; 
+            const value = messageContent[2]; 
 
-            // Trimitem comanda de setare către WebSocket
             socket.send(JSON.stringify({
                 'action': action,
                 'attribute_name': attribute_name,
                 'value': value,
-                'user_id': USER_ID  // Asigură-te că USER_ID este corect definit
+                'user_id': USER_ID  
             }));
         }
 
-        input.value = '';  // Curățăm câmpul după trimitere
+        input.value = '';  
     }
 
     </script>

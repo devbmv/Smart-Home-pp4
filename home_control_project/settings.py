@@ -33,12 +33,6 @@ API_PASSWORD = os.getenv("DJANGO_API_PASSWORD")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
-def debug(data):
-    if DEBUG:
-        print(data)
-
-
 # Allowed hosts configuration
 try:
     ALLOWED_HOSTS = json.loads(os.getenv("ALLOWED_HOSTS", "[]"))

@@ -25,9 +25,6 @@ def chatHome(request):
 @receiver(message_received)
 def handle_message(sender, **kwargs):
     message = kwargs.get("message")
-    if message == "home":
-        logger.debug("Primit home")
-        chatHome()
         
     # Aici poți face ceva în funcție de mesajul primit
     print(f"Mesajul primit în alt fișier: {message}")
