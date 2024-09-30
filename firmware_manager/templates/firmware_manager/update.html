@@ -98,7 +98,7 @@
             espRequest.open('POST', '{% url "upload_to_esp32" %}', true);  // Folosirea DTL pentru generarea URL-ului
 
             espRequest.onprogress = function (e) {
-                // Aceasta este etapa de upload către ESP32. Progresul aici ar trebui să fie mai lent, așa cum descrii.
+
                 if (e.lengthComputable) {
                     const percentComplete = (e.loaded / e.total) * 100;
                     progressBar.style.width = percentComplete + '%';

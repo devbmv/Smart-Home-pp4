@@ -29,7 +29,7 @@ class Choice(models.Model):
 class Room(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="rooms",default=1
+        User, on_delete=models.CASCADE, related_name="rooms"
     )
 
     def __str__(self):
@@ -37,6 +37,8 @@ class Room(models.Model):
 
     class Meta:
         ordering = ["name"]
+        # Adaugă o constrângere care asigură unicitatea camerei pentru fiecare utilizator
+        unique_together = ('name', 'user')
 
 
 # =============================================================================
@@ -45,7 +47,7 @@ class Room(models.Model):
 class Light(models.Model):
     name = models.CharField(max_length=100, default="")
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="lights")
-    description = models.TextField(null=True,blank=True, default="")
+    description = models.TextField(null=True, blank=True, default="")
     state = models.IntegerField(choices=STATE_CHOICES, default=2)
     choices = models.ManyToManyField(Choice, related_name="lights", blank=True)
 

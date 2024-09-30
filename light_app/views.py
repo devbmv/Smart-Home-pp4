@@ -67,7 +67,7 @@ def user_settings_view(request):
 
 @login_required
 def room_list_view(request):
-    rooms = Room.objects.prefetch_related("lights").all()
+    rooms = Room.objects.filter(user=request.user).prefetch_related("lights")
     paginator = Paginator(rooms, 3)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -78,6 +78,7 @@ def room_list_view(request):
         "page_obj": page_obj,
     }
     return render(request, "light_app/rooms_list.html", context)
+
 
 
 # =============================================================================
@@ -162,14 +163,13 @@ def add_room(request):
         form = RoomForm(request.POST)
         if form.is_valid():
             room = form.save(commit=False)
-            room.user = request.user
+            room.user = request.user  # Asociază camera cu utilizatorul curent
             room.save()
             return redirect("room_list")
     else:
         form = RoomForm()
 
     return render(request, "light_app/add_room.html", {"form": form})
-
 
 # =============================================================================
 
@@ -180,6 +180,7 @@ def add_light(request):
         form = LightForm(request.POST, user=request.user)
         if form.is_valid():
             light = form.save(commit=False)
+            light.room.user = request.user  # Asigură-te că lumina este în camera corectă
             light.save()
             return redirect("room_list")
     else:

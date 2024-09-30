@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "False"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['.herokuapp.com', '192.168.1.15', "127.0.0.1", '192.168.1.7', '86.45.36.88', 'home-control-dbba5bec072c.herokuapp.com']
 
 API_USERNAME = os.getenv("DJANGO_API_USERNAME")
@@ -128,9 +128,10 @@ else:
 if DEBUG:
     # Pe dezvoltare, servește fișierele local
     STATIC_URL = '/static/'
-    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'  # Servește fișierele static în mod local
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'  # Stochează fișierele local
+
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
