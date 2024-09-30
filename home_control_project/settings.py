@@ -222,16 +222,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = {"js"}
 if "DYNO" in os.environ:  # Dacă rulezi pe Heroku (sau altă platformă cu variabila DYNO)
     django_heroku.settings(locals())
-    SESSION_COOKIE_SECURE = True  # Asigură-te că aceste cookie-uri sunt trimise doar prin HTTPS
-    CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True  # Redirecționează automat HTTP -> HTTPS în producție
-    SECURE_HSTS_SECONDS = 31536000  # Activează HSTS pentru un an
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-else:
-    SESSION_COOKIE_SECURE = False  # În dezvoltare locală fără HTTPS
-    CSRF_COOKIE_SECURE = False
-    SECURE_SSL_REDIRECT = False
+
 
 # Setările proiectului continuă aici...
 
