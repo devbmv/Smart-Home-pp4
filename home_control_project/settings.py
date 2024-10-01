@@ -6,7 +6,6 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import django_heroku
-
 # Load environment variables from 'env.py' if the file exists
 if os.path.isfile(os.path.join(Path(__file__).resolve().parent.parent,
                                "env.py")):
@@ -32,6 +31,8 @@ ALLOWED_HOSTS = [
     "192.168.1.7",
     "86.45.36.88",
     "home-control-dbba5bec072c.herokuapp.com",
+    "*gitpod.io",
+    "localhost"
 ]
 
 # API credentials loaded from environment variables
@@ -143,7 +144,6 @@ WSGI_APPLICATION = "home_control_project.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
-
 # Cloudinary configuration for storing media files
 CLOUDINARY_URL = os.getenv("CLOUDINARY_URL")
 

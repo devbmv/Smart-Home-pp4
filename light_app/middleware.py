@@ -45,8 +45,7 @@ class UserSettingsMiddleware:
         """
         if request.user.is_authenticated:
             # Retrieve or create the user's settings.
-            user_settings, created = UserSettings.objects.get_or_create(
-                user=request.user)
+            user_settings, created = UserSettings.objects.get_or_create(user=request.user)
 
             # Activate the user's preferred language.
             translation.activate(user_settings.preferred_language)
@@ -59,8 +58,7 @@ class UserSettingsMiddleware:
 
             # Attach user settings and M5Core2 IP address to the request obj.
             request.user_settings = user_settings
-            request.user_ip = user_settings.m5core2_ip if user_settings.\
-                m5core2_ip else "none"
+            request.user_ip = user_settings.m5core2_ip if user_settings.m5core2_ip else "none"
 
         # Process the response from the next middleware or view.
         response = self.get_response(request)

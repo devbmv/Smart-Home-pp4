@@ -84,8 +84,7 @@ def user_settings_view(request):
         If the request method is POST and the form is valid, redirects to the
           home page.
     """
-    user_settings, created = UserSettings.objects.get_or_create(
-        user=request.user)
+    user_settings, created = UserSettings.objects.get_or_create(user=request.user)
     form = UserSettingsForm(instance=user_settings)
 
     if request.method == "POST":
@@ -190,11 +189,7 @@ def toggle_light(request, room_name, light_name):
 
     user_ip = request.user_ip
     if not user_ip or user_ip == "none":
-        return JsonResponse(
-            {"error": "ESP32 IP not configured for user", "action":
-             "go_to_settings"},
-            status=400,
-        )
+        return JsonResponse({"error": "ESP32 IP not configured for user", "action":"go_to_settings"},status=400,)
 
     response_text = ""
     action = "off" if light.state == 1 else "on"
@@ -211,12 +206,7 @@ def toggle_light(request, room_name, light_name):
                 response_text = f"Server offline: {e}"
 
             if home_online:
-                response = requests.get(
-                    f"http://{request.user_ip}/control_led",
-                    params={"room": room_name,
-                            "light": light_name, "action": action},
-                    timeout=30,
-                )
+                response = requests.get(f"http://{request.user_ip}/control_led",params={"room": room_name,"light": light_name, "action": action},timeout=30,)
                 if response.ok:
                     light.state = 1 if action == "on" else 2
                     light.save()

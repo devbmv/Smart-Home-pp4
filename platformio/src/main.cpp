@@ -31,9 +31,9 @@ struct Room;  // Forward declaration for Room struct
 std::map<String, Room> roomLightMap;
 
 //============================================================================
-
-#define M5CORE2
-#ifdef M5CORE2
+#define SERIAL_DEBUG
+#define M5CORE2_DEBUG
+#ifdef M5CORE2_DEBUG
 #include <M5Unified.h>
 M5GFX &lcd = M5.Lcd;
 #endif
@@ -44,14 +44,14 @@ AsyncWebServer server(80); // Async web server on port 80
 String base64Encode(String str);
 void addBasicAuth(HTTPClient &http);
 void reconnectWiFi();
-void print(String msg, uint16_t col, uint16_t row);
+void m5_debug(String msg, uint16_t col, uint16_t row);
+void s_debug(String msg);
 void fetchInitialLightStates();
 void printLightStates();
 void serverSetup();
 void displayIP();
 void processSerialCommands();
 void checkDjangoOnline();
-void print(String msg, uint16_t col, uint16_t row);
 
 void detectIPHandler(AsyncWebServerRequest *request);
 bool localServer = false; // Determines if the server is local (true) or Heroku (false)
@@ -157,7 +157,7 @@ void spiffsInit()
     File file = root.openNextFile();
     while (file)
     {
-        Serial.print("FILE: ");
+        s_debug("FILE: ");
         Serial.println(file.name());
         file = root.openNextFile();
     }
@@ -169,7 +169,7 @@ void spiffsInit()
  */
 void setup()
 {
-#ifdef M5CORE2
+#ifdef M5CORE2_DEBUG
     auto cfg = M5.config();
     M5.begin(cfg);
     M5.Display.setTextSize(2);
@@ -181,15 +181,15 @@ void setup()
     // Check if Django credentials are present
     if (!djangoUserName.isEmpty() || djangoPassword.isEmpty())
     {
-        print("Django credentials are missing.", 0, 0);
+        s_debug("Django credentials are missing.");
         delay(setup_debug_time);
     }
     else
     {
         Serial.println("Django credentials are present.");
-        print("Django credentials are present.", 0, 0);
-        print("Django Username: " + djangoUserName, 0, 20);
-        print("Django Password: " + djangoPassword, 0, 40);
+        s_debug("Django credentials are present.");
+        s_debug("Django Username: " + djangoUserName);
+        s_debug("Django Password: " + djangoPassword);
         delay(setup_debug_time);
     }
 
@@ -197,7 +197,7 @@ void setup()
     serverSetup();   // Setup the server
 
     displayIP(); // Display the current IP address
-#ifdef M5CORE2
+#ifdef M5CORE2_DEBUG
     M5.Display.setTextSize(2);
     M5.Display.setCursor(0, 0);
     M5.Display.fillScreen(BLACK); // Clear the screen
@@ -213,11 +213,11 @@ void loop()
     static uint32_t serverTimer;
     static unsigned long lastReconnectAttempt = 0;
 
-    if ((millis() - serverTimer > (checkInterval == 0 ? 10000 : checkInterval)))
+    if ((millis() - serverTimer > (checkInterval == 0 ? 2000 : checkInterval)))
     {
         printVariables();
         serverTimer = millis();
-        print(String(djangoOnline ? "Django Online" : "Django Offline"), 0, 0);
+        s_debug(String(djangoOnline ? "Django Online" : "Django Offline"));
     }
 
     checkDjangoOnline();     // Checks if Django server is online
@@ -230,7 +230,7 @@ void loop()
  */
 void checkDjangoOnline()
 {
-    if ((millis() - lastPingTime) > (checkInterval == 0 ? 10000 : checkInterval * 2))
+    if ((millis() - lastPingTime) > (checkInterval == 0 ? 4000 : checkInterval * 2))
     {
         if (djangoOnline == true)
         {
@@ -343,11 +343,11 @@ void addBasicAuth(HTTPClient &http)
 {
     if (djangoUserName.isEmpty() || djangoPassword.isEmpty())
     {
-        print("Username or password for Django is missing.", 0, 180);
+        s_debug("Username or password for Django is missing.");
         return;
     }
     String auth = base64Encode(djangoUserName + ":" + djangoPassword);
-    print(String("Auth urlcode = " + auth), 0, 180);
+    s_debug("Auth urlcode = " + auth);
     http.addHeader("Authorization", "Basic " + auth);
 }
 
@@ -378,7 +378,7 @@ void fetchInitialLightStates()
 
         if ((localServer && !lightStatusUrl.startsWith("http")) || (!localServer && !lightStatusUrl.startsWith("https")))
         {
-            print("Invalid lightStatusUrl format!", 0, 20);
+            s_debug("Invalid lightStatusUrl format!");
             return;
         }
 
@@ -392,7 +392,7 @@ void fetchInitialLightStates()
             if (ESP.getMaxAllocHeap() < 500)
             {
                 Serial.println("Low memory: Unable to allocate space for JSON parsing.");
-                print("Invalid light format!", 0, 20);
+                s_debug("Invalid light format!");
                 return;
             }
 
@@ -402,8 +402,7 @@ void fetchInitialLightStates()
 
             if (error)
             {
-                Serial.print(F("Error parsing JSON: "));
-                print("Error parsing JSON:", 0, 20);
+                s_debug("Error parsing JSON:");
                 Serial.println(error.f_str());
                 return;
             }
@@ -448,14 +447,13 @@ void printLightStates()
     int line = 0;
     for (const auto &roomEntry : roomLightMap)
     {
-        Serial.printf("Room: %s\n", roomEntry.first.c_str());
-        print("Room: " + roomEntry.first, 0, line);
+        String info = "Room: " + String(roomEntry.first.c_str()) + "\n";
+        s_debug(info + "Room: " + roomEntry.first);
         line += 20;
         for (const Light &light : roomEntry.second.lights)
         {
             String lightStateText = "Light: " + light.name + ", State: " + (light.state ? "on" : "off");
-            Serial.println(lightStateText);
-            print(lightStateText, 0, line);
+            s_debug(lightStateText);
             line += 20;
         }
     }
@@ -476,7 +474,7 @@ void reconnectWiFi()
     {
         delay(1000);
         Serial.println("Connecting to WiFi...");
-        print("Connecting to WiFi...", 0, 40);
+        s_debug("Connecting to WiFi...");
     }
 
     if (WiFi.status() != WL_CONNECTED)
@@ -484,54 +482,77 @@ void reconnectWiFi()
         Serial.println("Failed to connect. Rebooting...");
     }
     Serial.println("Connected to WiFi.");
-    print("Connected to WiFi.", 0, 40);
+    s_debug("Connected to WiFi.");
 }
 
 //============================================================================
 /**
  * @brief Detecting django server ip adress .
  */
-void detectIPHandler(AsyncWebServerRequest * request = nullptr) {
-        djangoOnline = true;
-        lastPingTime = millis();
+void detectIPHandler(AsyncWebServerRequest *request = nullptr)
+{
+    djangoOnline = true;
+    lastPingTime = millis();
 
-        // Verificăm dacă adresa IP a clientului este setată
-        if (clientIPAddress.isEmpty()) {
-                IPAddress clientIP = request -> client() -> remoteIP();
-                clientIPAddress = clientIP.toString();
+    // Verificăm dacă adresa IP a clientului este setată
+if (clientIPAddress.isEmpty() || clientIPAddress != request->client()->remoteIP().toString())
+    {
+        IPAddress clientIP = request->client()->remoteIP();
+        clientIPAddress = clientIP.toString();
 
-                // Verificăm dacă a fost primit parametrul "check_interval"
-                if (request -> hasParam("check_interval")) {
-                        checkInterval = request -> getParam("check_interval") -> value().toInt() * 1000;
-                } else {
-                        request -> send(200, "text/plain", "No check_interval provided.");
-                }
-
-                // Setarea URL-urilor în funcție de IP
-                if (isLocalServer(clientIPAddress)) {
-                        lightStatusUrl = "http://" + clientIPAddress + ":8000/lights_status/";
-                        serialPostUrl = "http://" + clientIPAddress + ":8000/esp/serial_data/";
-                } else {
-                        lightStatusUrl = "http://" + clientIPAddress + "/lights_status/";
-                        serialPostUrl = "http://" + clientIPAddress + "/esp/serial_data/";
-                }
-
-                Serial.println("Django IP is: " + clientIPAddress);
-        } else if (checkInterval == 0) {
-                // Dacă IP-ul este deja setat și nu există check_interval
-                if (request -> hasParam("check_interval")) {
-                        checkInterval = request -> getParam("check_interval") -> value().toInt() * 1000;
-                        request -> send(200, "Give me check_interval var");
-                }
-        } else {
-                // Dacă IP-ul este deja setat și nu există check_interval
-                if (request -> hasParam("check_interval")) {
-                        checkInterval = request -> getParam("check_interval") -> value().toInt() * 1000;
-                        request -> send(200, "text/plain", "New interval received: " + String(checkInterval));
-                } else {
-                        request -> send(200, "text/plain", "Home is Online");
-                }
+        // Verificăm dacă a fost primit parametrul "check_interval"
+        if (request->hasParam("check_interval"))
+        {
+            checkInterval = request->getParam("check_interval")->value().toInt() * 1000;
         }
+        else
+        {
+            request->send(200, "text/plain", "No check_interval provided.");
+        }
+
+        // Setarea URL-urilor în funcție de IP
+        if (isLocalServer(clientIPAddress))
+        {
+            lightStatusUrl = "http://" + clientIPAddress + ":8000/lights_status/";
+            serialPostUrl = "http://" + clientIPAddress + ":8000/esp/serial_data/";
+        }
+        else
+        {
+            lightStatusUrl = "http://" + clientIPAddress + "/lights_status/";
+            serialPostUrl = "http://" + clientIPAddress + "/esp/serial_data/";
+        }
+
+        Serial.println("Django IP is: " + clientIPAddress);
+    }
+    else if (checkInterval == 0)
+    {
+        // Dacă IP-ul este deja setat și nu există check_interval
+        if (request->hasParam("check_interval"))
+        {
+            checkInterval = request->getParam("check_interval")->value().toInt() * 1000;
+            request->send(200, "Give me check_interval var");
+                        s_debug("cjeck=0 and hasparam");
+
+        }
+                    s_debug("In check=0");
+
+    }
+    else
+    {
+        // Dacă IP-ul este deja setat și nu există check_interval
+        if (request->hasParam("check_interval"))
+        {
+            checkInterval = request->getParam("check_interval")->value().toInt() * 1000;
+            request->send(200, "text/plain", "New interval received: " + String(checkInterval));
+            s_debug("In hasPar");
+        }
+        else
+        {
+            request->send(200, "text/plain", "Home is Online");
+                        s_debug("in else has par");
+
+        }
+    }
 }
 /**
  * @brief Displays the current IP address of the device.
@@ -540,7 +561,7 @@ void displayIP()
 {
     IPAddress ip = WiFi.localIP();
     String ipText = "MY IP: " + ip.toString();
-    print(ipText, 0, 10);
+    s_debug(ipText);
 }
 
 //============================================================================
@@ -554,7 +575,7 @@ void handleUpdateStart(AsyncWebServerRequest *request, String filename, size_t i
     if (!index)
     {
         Serial.printf("Update Start: %s\n", filename.c_str());
-        print("Update start:", 0, 60);
+        s_debug("Update start:");
         if (filename == "firmware.bin")
         {
             Update.begin(UPDATE_SIZE_UNKNOWN);
@@ -574,7 +595,7 @@ void handleUpdateStart(AsyncWebServerRequest *request, String filename, size_t i
         else
         {
             Serial.println("File is not supported for updates.");
-            print("File is not supported ", 0, 60);
+            s_debug("File is not supported ");
             return;
         }
     }
@@ -636,7 +657,7 @@ void serverSetup()
                   }
                   String combinedText = room + " " + light + " is: " + action;
                   djangoOnline = true;
-                  print(combinedText, 0, 80);
+                  s_debug(combinedText);
                   request->send(200, "application/json", " {\"status\":\"success\"} "); });
 
     //============================================================================
@@ -725,12 +746,17 @@ void serverSetup()
  * @param col Column position on the display.
  * @param row Row position on the display.
  */
-void print(String msg, uint16_t col, uint16_t row)
+void m5_debug(String msg, uint16_t col, uint16_t row)
 {
-    Serial.println(msg);
-#ifdef M5CORE2
+#ifdef M5CORE2_DEBUG
     lcd.setCursor(col, row);
     lcd.fillRect(col, row, 320, 20, BLACK); // Clear the area where the text will be displayed
     lcd.println(msg);
+#endif
+}
+void s_debug(String msg)
+{
+#ifdef SERIAL_DEBUG
+    Serial.println(msg);
 #endif
 }

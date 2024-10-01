@@ -1,5 +1,5 @@
 from light_app.models import UserSettings, User
-from home_control_project.settings import DEBUG
+from home_control_project.settings import DEBUG ,DATABASES
 
 # Global dictionary to store the online status of each user
 # The keys are user IDs, and the values are booleans representing the 
@@ -17,7 +17,7 @@ def debug(data):
     if DEBUG:
         print(data)
 
-
+debug(DATABASES)
 def global_variables(request):
     """
     Context processor to add global variables to the template context.
@@ -41,8 +41,7 @@ def global_variables(request):
 
     if request.user.is_authenticated:
         # Get or create user settings for the authenticated user
-        user_settings, created = UserSettings.objects.get_or_create(
-            user=request.user)
+        user_settings, created = UserSettings.objects.get_or_create(user=request.user)
         user_id = request.user.id
 
         # Get the current online status from the global dictionary for  user

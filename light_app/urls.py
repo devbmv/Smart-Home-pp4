@@ -8,11 +8,7 @@ urlpatterns = [
     path("settings/", views.user_settings_view, name="user_settings"),
     # Route for user settings page.
 
-    path(
-        "toggle-light/<str:room_name>/<str:light_name>/",
-        views.toggle_light,
-        name="toggle_light",
-    ),
+    path("toggle-light/<str:room_name>/<str:light_name>/",views.toggle_light,name="toggle_light",),
     # Route to toggle the light in a specific room and light by their names.
 
     path("rooms/", views.room_list_view, name="room_list"),

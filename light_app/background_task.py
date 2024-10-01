@@ -54,8 +54,7 @@ def start_permanent_task():
                     if user_settings.test_mode:
                         with lock:
                            # Toggle the current home_online_status for the user
-                            current_status = home_online_status.get(
-                                user_id, False)
+                            current_status = home_online_status.get(user_id, False)
                             home_online_status[user_id] = not current_status
                         update = True
 
@@ -63,9 +62,7 @@ def start_permanent_task():
                         try:
                         # Send a GET request to check the M5Core2 device status
                             response = requests.get(
-                                f"http://{user_settings.m5core2_ip}?\
-                                    check_interval={
-                                    user_settings.server_check_interval}",
+                                f"http://{user_settings.m5core2_ip}?check_interval={user_settings.server_check_interval}",
                                 timeout=30,
                             )
 

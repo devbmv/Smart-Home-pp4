@@ -105,31 +105,11 @@ class UserSettingsForm(forms.ModelForm):
         ]
         widgets = {
             # Text input for display name.
-            "display_name": forms.TextInput(attrs={"class":
-                                            "form-control auto-expand"}),
+            "display_name": forms.TextInput(attrs={"class":"form-control auto-expand"}),
             # Email input with custom styling.
-            "email": forms.EmailInput(attrs={"class":
-                                             "form-control auto-expand"}),
+            "email": forms.EmailInput(attrs={"class":"form-control auto-expand"}),
             # Input for M5Core2 IP address.
-            "m5core2_ip": forms.TextInput(attrs={"class":
-                                                 "form-control auto-expand"}),
+            "m5core2_ip": forms.TextInput(attrs={"class":"form-control auto-expand"}),
         }
 
-    def clean_m5core2_ip(self):
-        """
-        Custom validation for the `m5core2_ip` field.
-
-        Ensures that the IP address entered is in the correct format (IPv4).
-
-        Raises:
-            ValidationError: If the IP address is invalid.
-
-        Returns:
-            str: The cleaned IP address.
-        """
-        ip = self.cleaned_data["m5core2_ip"]
-        # Check if the IP is a valid IPv4 address.
-        if ip and not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip):
-            raise ValidationError("Invalid IP address")
-        return ip
 

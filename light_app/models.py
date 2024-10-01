@@ -42,8 +42,7 @@ class Room(models.Model):
     """
 
     name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="rooms")
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="rooms")
 
     def __str__(self):
         return self.name
@@ -120,9 +119,7 @@ class UserSettings(models.Model):
 
     display_name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(max_length=255, blank=True)
-    preferred_language = models.CharField(
-        max_length=50,
-        choices=[("en", "English"), ("fr", "French"), ("de", "German")],
+    preferred_language = models.CharField(max_length=50,choices=[("en", "English"), ("fr","French"), ("de", "German")],
         default="en",
     )
     timezone = models.CharField(max_length=50, default="UTC")
@@ -130,13 +127,10 @@ class UserSettings(models.Model):
         max_length=10, choices=[("light", "Light"), ("dark", "Dark")],
         default="light"
     )
-    font_size = models.CharField(
-        max_length=10,
-        choices=[("small", "Small"), ("medium", "Medium"), ("large", "Large")],
+    font_size = models.CharField(max_length=10,choices=[("small", "Small"), ("medium", "Medium"), ("large", "Large")],
         default="medium",
     )
-    primary_color = models.CharField(
-        max_length=7, default="#2980b9")  # Default color is blue
+    primary_color = models.CharField(max_length=7, default="#2980b9")  # Default color is blue
     email_notifications = models.BooleanField(default=True)
     push_notifications = models.BooleanField(default=True)
     two_factor_authentication = models.BooleanField(default=False)
