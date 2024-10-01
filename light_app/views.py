@@ -40,7 +40,8 @@ def check_home_status(request):
 
 @login_required
 def user_settings_view(request):
-    user_settings, created = UserSettings.objects.get_or_create(user=request.user)
+    user_settings, created = UserSettings.objects.get_or_create(
+        user=request.user)
     form = UserSettingsForm(instance=user_settings)
 
     if request.method == "POST":
@@ -80,7 +81,6 @@ def room_list_view(request):
     return render(request, "light_app/rooms_list.html", context)
 
 
-
 # =============================================================================
 
 
@@ -110,9 +110,11 @@ def toggle_light(request, room_name, light_name):
 
     user_ip = request.user_ip
     if not user_ip or user_ip == "none":
-        #debug("No ESP32 IP configured for user.")
-        return JsonResponse({"error": "ESP32 IP not configured for user"}, status=400)
-
+        # debug("No ESP32 IP configured for user.")
+        return JsonResponse(
+            {"error": "ESP32 IP not configured for user", "action": "go_to_settings"},
+            status=400
+        )
     response_text = ""
     action = "off" if light.state == 1 else "on"
 
@@ -120,20 +122,22 @@ def toggle_light(request, room_name, light_name):
 
         try:
             try:
-                #debug(f"Checking if ESP32 is online at IP: {user_ip}")
-                response = requests.get(f"http://{request.user_ip}", timeout=30)
+                # debug(f"Checking if ESP32 is online at IP: {user_ip}")
+                response = requests.get(
+                    f"http://{request.user_ip}", timeout=30)
                 if response.status_code == 200:
                     home_online = True
-                    #debug(f"\nESP32 is online at IP: {user_ip}\n")
+                    # debug(f"\nESP32 is online at IP: {user_ip}\n")
             except requests.exceptions.RequestException as e:
                 home_online = False
-                #debug("Esp Server Offline")
+                # debug("Esp Server Offline")
                 response_text = f"Server offline: {e}"
 
             if home_online:
                 response = requests.get(
                     f"http://{request.user_ip}/control_led",
-                    params={"room": room_name, "light": light_name, "action": action},
+                    params={"room": room_name,
+                            "light": light_name, "action": action},
                     timeout=30,
                 )
                 if response.ok:

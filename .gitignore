@@ -39,23 +39,6 @@ db.sqlite3
 
 # Fișiere de compilare
 *.DS_Store
-*.sass-cache/
 *.cache/
-*.coverage
-*.coveragerc
-.npm/
-node_modules/
-bower_components/
 
-# Fișierele create de Heroku
-
-# Fișiere pentru testing
-.tox/
-.pytest_cache/
-
-# Fișiere JetBrains specific (PyCharm etc.)
-.idea/
-
-# Fișiere pentru deployment (de exemplu, platformio)
-platformio/
 env.py

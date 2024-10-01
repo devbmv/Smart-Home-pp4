@@ -172,16 +172,24 @@
 
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('modalMessage').textContent = `Error: ${error.message}`;
+                const errorData = JSON.parse(error.message);
+
+                if (errorData.action && errorData.action === "go_to_settings") {
+                    // Show a "Go to Settings" button if the error includes the action to go to settings
+                    document.getElementById('modalMessage').innerHTML = `
+                        ${errorData.error}
+                        <br>
+                        <button onclick="window.location.href='/settings'" class="btn btn-primary mt-2">
+                            Go to Settings
+                        </button>`;
+                } else {
+                    document.getElementById('modalMessage').textContent = `Error: ${errorData.error}`;
+                }
                 infoModal.style.display = 'block';
             });
             setTimeout(closeModal, 3000);
         });
-
     });
-
-    // Setare inițială pentru a închide modalul
 });
 </script>
 
