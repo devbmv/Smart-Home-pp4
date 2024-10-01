@@ -23,8 +23,9 @@
             {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-            <button class="btn btn-signup" type="submit">{% trans "Sign In" %}</button>
-          </form>
+            <button class="btn btn-primary btn-lg" type="submit">
+              <i class="fas fa-sign-in-alt me-2"></i> {% trans "Sign In" %}
+            </button>          </form>
         </div>
       </div>
     </div>

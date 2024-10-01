@@ -51,7 +51,8 @@ def upload_firmware(request):
             return JsonResponse(
                 {
                     "status": "uploaded_to_django",
-                    "message": "Firmware uploaded to Django successfully. Now uploading to ESP32...",
+                    "message": "Firmware uploaded to Django successfully.\
+                          Now uploading to ESP32...",
                 }
             )
         return HttpResponse(status=405)
@@ -69,10 +70,9 @@ def upload_to_esp32(request):
             settings.MEDIA_ROOT, "firmware.bin"
         )  # Fișierul deja uploadat
 
-        # Trimite fișierul către ESP32 prin endpoint-ul /django_update_firmware
         with open(file_path, "rb") as f:
             url = (
-                f"http://{request.user_ip}/django_update_firmware"  # Adresa IP a ESP32
+                f"http://{request.user_ip}/django_update_firmware" 
             )
             response = requests.post(url, files={"firmware": f})
 
@@ -85,7 +85,8 @@ def upload_to_esp32(request):
             )
         else:
             return JsonResponse(
-                {"status": "error", "message": "Failed to upload firmware to ESP32"},
+                {"status": "error", "message": "Failed to upload\
+                  firmware to ESP32"},
                 status=500,
             )
     except Exception as e:

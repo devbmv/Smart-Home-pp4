@@ -1,68 +1,95 @@
+/* 
+   Reset margin, padding, and set box-sizing to border-box for all elements.
+   This helps create consistency across browsers.
+*/
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* 
+   Set font, height, margin, and padding for the root `html` and `body` elements.
+   Apply a flex layout to ensure that the body and its content fill the full viewport height.
+*/
 html,
 body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Lato', sans-serif;
-    font-size: 17px;
-    color: #34495e;
-    background-color: #ecf0f1;
+    font-family: 'Lato', sans-serif;  /* Set default font */
+    font-size: 17px;                   /* Default font size */
+    color: #34495e;                    /* Text color */
+    background-color: #ecf0f1;         /* Background color */
     display: flex;
     flex-direction: column;
 }
 
 /* Light and Dark Themes */
+/* Styles for light mode */
 body.light {
     background-color: white;
     color: black;
 }
 
+/* Styles for dark mode */
 body.dark {
     background-color: #121212;
     color: #e0e0e0;
 }
 
+/* Font size variations */
 body.small {
-    font-size: 12px;
+    font-size: 12px;    /* Small font size */
 }
 
 body.medium {
-    font-size: 16px;
+    font-size: 16px;    /* Medium font size */
 }
 
 body.large {
-    font-size: 20px;
+    font-size: 20px;    /* Large font size */
 }
 
-/* Primary Button */
+/* Primary Button Styles */
+/* 
+   Default primary button color and hover effects using CSS variables 
+   for dynamic color changes.
+*/
 .btn-primary {
     background-color: var(--primary-color, #2471a3);
     border-color: var(--primary-color, #2471a3);
-    color: #ffffff; /* White text for visibility */
+    color: #ffffff;  /* White text for visibility */
 }
 
 .btn-primary:hover {
-    background-color: #1f618d;
+    background-color: #1f618d;  /* Darker color on hover */
     border-color: #1a5276;
 }
 
 /* Theme Elements */
+/* 
+   Set theme-based color schemes for common UI elements like 
+   the navbar, footer, cards, etc.
+*/
 body.dark {
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: #121212;  /* Dark background */
+    color: #e0e0e0;             /* Light text color */
 }
 
+/* 
+   Inherit background and text colors for various elements 
+   in both light and dark themes.
+*/
 .navbar, .footer, .card, .list-group-item, .card-footer {
     background-color: inherit;
     color: inherit;
 }
 
+/* 
+   Dark theme adjustments for cards, list items, and footers. 
+   Set background to darker colors.
+*/
 body.dark .card,
 body.dark .list-group-item,
 body.dark .card-footer {
@@ -70,38 +97,53 @@ body.dark .card-footer {
     color: #e0e0e0;
 }
 
-/* Anchor Tags */
+/* Anchor Tag Styles */
+/* 
+   Default link color using the primary color variable for consistency 
+   across themes.
+*/
 a {
     color: var(--primary-color, #2980b9);
 }
 
+/* Ensure body takes full viewport height and flexbox layout */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* Main content takes up the remaining space after header/footer */
 main {
     flex: 1;
 }
 
+/* Footer remains at the bottom */
 footer {
     flex-shrink: 0;
 }
 
-/* Headers */
+/* Header Styles */
+/* 
+   Ensure all headings (h1 to h6) use the Oswald font 
+   and consistent color for readability.
+*/
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Oswald', sans-serif;
     color: #2c3e50;
 }
 
-/* Navbar */
+/* Navbar Styles */
+/* 
+   Navbar box-shadow for a subtle depth effect and consistent background/border styles.
+*/
 .navbar {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-bottom: 3px solid #2980b9;
-    background-color: #1a5276;
+    background-color: #1a5276;  /* Deep blue background */
 }
 
+/* Navbar brand with custom font, size, and spacing */
 .navbar-brand {
     font-family: 'Oswald', sans-serif;
     font-weight: bold;
@@ -111,9 +153,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-brand:hover {
-    color: #f39c12;
+    color: #f39c12;  /* Hover color change */
 }
 
+/* 
+   Navigation link styles. Bold font with a distinct color for better visibility.
+*/
 a.nav-link {
     color: #0ca1c7;
     font-family: 'Lato', sans-serif;
@@ -121,9 +166,10 @@ a.nav-link {
     font-size: 18px;
 }
 
+/* Active or shown nav links get highlighted */
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
-    color: #f39c12;
+    color: #f39c12;  /* Highlight color */
 }
 
 .nav-link:hover {
@@ -131,11 +177,16 @@ a.nav-link {
     color: #f39c12;
 }
 
+/* Header margin reset */
 header {
     margin-bottom: 0;
 }
 
-/* Footer */
+/* Footer Styles */
+/* 
+   Social media footer style with a shadow effect and a consistent look 
+   with other sections.
+*/
 footer.social {
     flex-shrink: 0;
     text-align: center;
@@ -146,6 +197,7 @@ footer.social {
     width: 100%;
 }
 
+/* Footer text styling */
 footer p {
     font-family: 'Lato', sans-serif;
     font-size: 16px;
@@ -154,24 +206,29 @@ footer p {
     margin-bottom: 5px;
 }
 
+/* Footer links and social media icons */
 footer>a {
     margin-right: 30px;
     font-size: 24px;
     color: #f39c12;
-    transition: color 0.3s, transform 0.3s;
+    transition: color 0.3s, transform 0.3s;  /* Smooth color and scale change on hover */
 }
 
 .social-links:hover {
-    color: #e67e22;
+    color: #e67e22;  /* Color change on hover */
     font-weight: bold;
-    transform: scale(1.2);
+    transform: scale(1.2);  /* Slight scale-up on hover */
 }
 
 .social-links {
-    transition: all 0.3s ease;
+    transition: all 0.3s ease;  /* Smooth transition for hover effects */
 }
 
 /* Button Styles */
+/* 
+   General button styling with hover effects.
+   Buttons scale slightly and get a shadow when hovered.
+*/
 .btn {
     font-weight: bold;
     border-radius: 5px;
@@ -181,62 +238,67 @@ footer>a {
 }
 
 .btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 5px 15px rgba(52, 152, 219, 0.4);
+    transform: scale(1.05);  /* Slight scale-up */
+    box-shadow: 0px 5px 15px rgba(52, 152, 219, 0.4);  /* Blue shadow on hover */
 }
 
-/* Specific styles for buttons on cards */
+/* Button styles for different actions (add, edit, delete) */
+/* Add light button */
 .btn-add-light {
-    background-color: #28a745;
+    background-color: #28a745;  /* Green background */
     border: 2px solid #218838;
     color: #ffffff;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 .btn-add-light:hover {
-    background-color: #218838;
+    background-color: #218838;  /* Darker green on hover */
     border-color: #1e7e34;
 }
 
+/* Edit room button */
 .btn-edit-room {
-    background-color: #ffc107;
-    color: #000000;
+    background-color: #ffc107;  /* Yellow background */
+    color: #000000;             /* Black text */
     border: 2px solid #e0a800;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 .btn-edit-room:hover {
-    background-color: #e0a800;
+    background-color: #e0a800;  /* Darker yellow on hover */
     border-color: #d39e00;
 }
 
+/* Delete room button */
 .btn-delete-room {
-    background-color: #dc3545;
+    background-color: #dc3545;  /* Red background */
     border: 2px solid #c82333;
     color: #ffffff;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 .btn-delete-room:hover {
-    background-color: #c82333;
+    background-color: #c82333;  /* Darker red on hover */
     border-color: #bd2130;
 }
 
-/* Toggle switch styles */
+/* Toggle switch styles for any on/off controls (e.g., light switches) */
 .switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
-    margin-left: auto;
+    margin-left: auto;  /* Align to the right */
 }
 
+/* Hide the default input for the switch */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
+/* Slider styles for the toggle switch */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -244,52 +306,57 @@ footer>a {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #dcdcdc;
-    transition: .4s;
-    border-radius: 34px;
+    background-color: #dcdcdc;  /* Default background color */
+    transition: .4s;  /* Smooth transition when toggling */
+    border-radius: 34px;  /* Round edges */
 }
 
+/* Slider "before" pseudo-element */
 .slider:before {
     position: absolute;
-    content: attr(data-text);
+    content: attr(data-text);  /* Display custom text */
     height: 26px;
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
+    background-color: white;  /* Circle background */
+    transition: .4s;  /* Smooth transition on toggle */
+    border-radius: 50%;  /* Round the toggle button */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
     font-weight: bold;
-    color: #000;
+    color: #000;  /* Text color */
 }
 
+/* Change the background color when the switch is checked */
 input:checked+.slider {
-    background-color: #2aa989;
+    background-color: #2aa989;  /* Green color when "on" */
 }
 
+/* Move the slider button when checked */
 input:checked+.slider:before {
-    transform: translateX(26px);
-    content: "on";
+    transform: translateX(26px);  /* Slide the button */
+    content: "on";  /* Display "on" text when checked */
 }
 
+/* Display "off" text when not checked */
 input:not(:checked)+.slider:before {
-    content: "off";
+    content: "off";  /* Display "off" */
 }
 
+/* Rounded slider */
 .slider.round {
-    border-radius: 34px;
+    border-radius: 34px;  /* Round slider */
 }
 
+/* Rounded button inside the slider */
 .slider.round:before {
-    border-radius: 50%;
+    border-radius: 50%;  /* Make button fully round */
 }
 
-
-/* Card styles */
+/* Card deck layout, for evenly spaced card layouts */
 .card-deck {
     display: flex;
     flex-wrap: wrap;
@@ -297,35 +364,39 @@ input:not(:checked)+.slider:before {
     margin-bottom: 20px;
 }
 
+/* Card layout with shadow and transition on hover */
 .card {
-    flex: 1 0 30%;
+    flex: 1 0 30%;  /* Cards take up 30% of the width */
     display: flex;
     flex-direction: column;
     min-height: 100%;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 10px;  /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Soft shadow */
+    transition: transform 0.3s, box-shadow 0.3s;  /* Smooth hover effect */
 }
 
+/* Card hover effect */
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);  /* Lift card on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  /* Stronger shadow */
 }
 
+/* Card body with padding */
 .card-body {
     flex-grow: 1;
     padding: 20px;
 }
 
+/* Card footer styles */
 .card-footer {
-    margin-top: auto;
+    margin-top: auto;  /* Stick to the bottom */
     background-color: #f7f7f7;
     padding: 15px;
     border-top: 1px solid #e0e0e0;
 }
 
-/* List item styles */
+/* List group item styles */
 .list-group-item {
     padding: 0.5rem 0.75rem;
     display: flex;
@@ -335,103 +406,115 @@ input:not(:checked)+.slider:before {
     border-bottom: 1px solid #e0e0e0;
 }
 
+/* Remove border from the last list item */
 .list-group-item:last-child {
     border-bottom: none;
 }
 
+/* Center-align items in flex layout */
 .list-group-item .d-flex {
     align-items: center;
 }
 
+/* Margin left helper class */
 .ml-2 {
-    margin-left: 0.5rem;
+    margin-left: 0.5rem;  /* Add margin to the left */
 }
 
+/* Form for toggling lights */
 .toggle-light-form {
     margin-left: 10px;
 }
 
-
-/* Stil pentru link-ul de autentificare */
+/* Style for the login link */
 .login-link {
     color: var(--primary-color);
     font-weight: bold;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
+/* Hover effect for login link */
 .login-link:hover {
     color: var(--primary-color);
-    text-decoration: underline;
-    transform: rotate(-5deg) scale(1.1);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    text-decoration: underline;  /* Underline on hover */
+    transform: rotate(-5deg) scale(1.1);  /* Rotate and scale on hover */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);  /* Glow effect */
 }
 
-/* Badge stil */
+/* Badge styles */
 .badge {
-    font-size: 0.8rem;
+    font-size: 0.8rem;  /* Small font for badges */
     padding: 0.4em 0.6em;
     border-radius: 50%;
     position: relative;
-    top: -2px;
+    top: -2px;  /* Slightly above the text */
 }
 
-/* Adăugare efect de strălucire la hover */
+/* Advanced hover effect for login link with glow */
 .login-link:hover {
-    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #007bff, 0 0 30px #007bff, 0 0 40px #007bff, 0 0 50px #00ff00, 0 0 60px #00ff00, 0 0 70px #00ff00;
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #007bff,
+                 0 0 30px #007bff, 0 0 40px #007bff, 0 0 50px #00ff00,
+                 0 0 60px #00ff00, 0 0 70px #00ff00;  /* Multicolor glow */
 }
+
+/* Style for light-on state */
 .light-on {
-    background-color: #fff9c4; /* Galben foarte deschis */
-    color: #424242; /* Gri mediu pentru text */
+    background-color: #fff9c4;  /* Very light yellow */
+    color: #424242;  /* Medium gray text */
 }
+
+/* Style for light-off state */
 .light-off {
-    background-color: #34495e; /* Un albastru-gri închis */
-    color: #bdc3c7; /* Gri deschis pentru text */
+    background-color: #34495e;  /* Dark blue-gray */
+    color: #bdc3c7;  /* Light gray text */
 }
 
-
+/* Notification banner styles */
 #topNotification {
     position: fixed;
-    top: 56px; /* Adjust based on the height of your navbar */
+    top: 56px;  /* Adjust for navbar height */
     left: 50%;
-    transform: translateX(-50%);
-    width: 100%; /* Full width on mobile */
-    max-width: 600px; /* Max width on larger screens */
+    transform: translateX(-50%);  /* Center horizontally */
+    width: 100%;  /* Full width on mobile */
+    max-width: 600px;  /* Max width for larger screens */
     z-index: 1050;
 }
 
+/* Responsive adjustments for notification banner */
 @media (min-width: 768px) {
     #topNotification {
-        width: 90%; /* Slightly smaller on tablets and above */
+        width: 90%;  /* Slightly smaller on tablets */
     }
 }
 
 @media (min-width: 992px) {
     #topNotification {
-        width: 50%; /* Even smaller on desktops */
+        width: 50%;  /* Even smaller on desktop */
     }
 }
 
-
+/* Modal body styling */
 .modal-body {
-    background-color: #dff0d8; /* Culoarea de fundal similară cu cea din imagine */
-    color: #3c763d; /* Culoarea textului */
+    background-color: #dff0d8;  /* Light green background */
+    color: #3c763d;  /* Darker green text */
     padding: 10px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
 }
 
+/* Close button for modal */
 .btn-close {
     background: none;
     border: none;
     font-size: 1.2rem;
     color: #3c763d;
-    cursor: pointer;
+    cursor: pointer;  /* Pointer cursor on hover */
 }
 
-
-/* Împiedică redimensionarea manuală și ascunde scroll-ul */
+/* Prevent manual resizing of text areas and hide scrollbars */
 .auto-expand {
-    resize: none;  /* Dezactivează redimensionarea manuală */
-    overflow: hidden;  /* Ascunde scroll-ul când textul depășește zona vizibilă */
-    min-height: 40px;  /* Setează o înălțime minimă */
+    resize: none;  /* Disable manual resizing */
+    overflow: hidden;  /* Hide scrollbars */
+    min-height: 40px;  /* Set a minimum height */
 }
+

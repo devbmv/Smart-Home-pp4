@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container text-center mt-5">
-    <h1 class="display-4">Welcome to My Smart Home Project</h1>
+    <h1 class="display-4">Welcome to  Smart Home </h1>
     <p class="lead">This is a simple Django project designed to manage and control smart devices in a home environment.</p>
     
     <div class="row mt-5">
@@ -27,9 +27,14 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="card-title">Customize Settings</h2>
-                    <p class="card-text">Customize your smart home settings to suit your preferences.</p>
+                    <p class="card-text">Customize your smart home settings to suit your preferences.
+                    </p>
                     {% if user.is_authenticated %}
                     <a class="btn btn-warning btn-lg mt-3" href="{% url 'user_settings' %}">Settings</a>
+                    {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        You need to <a href="{% url 'account_login' %}" class="alert-link">log in</a> to customize your smart home settings.
+                      </div>
                     {% endif %}
                 </div>
             </div>

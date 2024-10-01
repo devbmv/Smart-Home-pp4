@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 from asgiref.sync import sync_to_async
 
+
 class MyWebSocketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
@@ -18,7 +19,8 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
 
         if action is None or attribute_name is None:
             await self.send(text_data=json.dumps({
-                'error': "Action or attribute name was not provided or is invalid."
+                'error': "Action or attribute name was not\
+                      provided or is invalid."
             }))
             return
 
@@ -32,7 +34,8 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                 value = text_data_json.get("value")
                 if value is None:
                     await self.send(text_data=json.dumps({
-                        'error': "Value for setting the attribute was not provided."
+                        'error': "Value for setting the attribute \
+                            was not provided."
                     }))
                     return
 
@@ -40,7 +43,8 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
 
             else:
                 await self.send(text_data=json.dumps({
-                    'error': "Invalid action. Supported actions are 'get' and 'set'."
+                    'error': "Invalid action. Supported actions\
+                          are 'get' and 'set'."
                 }))
 
         except Exception as e:
@@ -50,9 +54,10 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
 
     async def handle_get_request(self, attribute_name, user_id):
         """
-        Gestionăm cererea de a obține un atribut din settings.py sau dintr-un model.
+        Gestionăm cererea de a obține un atribut din settings.py\
+              sau dintr-un model.
         """
-        from light_app.models import UserSettings  # Asigură-te că importăm modelul corect
+        from light_app.models import UserSettings
         from django.contrib.auth.models import User
 
         # Încercăm să obținem variabila din settings.py
@@ -63,10 +68,10 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                 'value': value
             }))
         else:
-            # Dacă nu există în settings, căutăm în modelul UserSettings
             try:
                 user = await sync_to_async(User.objects.get)(id=user_id)
-                user_settings = await sync_to_async(UserSettings.objects.get)(user=user)
+                user_settings = await sync_to_async(UserSettings.
+                                                    objects.get)(user=user)
 
                 if hasattr(user_settings, attribute_name):
                     value = getattr(user_settings, attribute_name)
@@ -76,7 +81,8 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                     }))
                 else:
                     await self.send(text_data=json.dumps({
-                        'error': f"Attribute '{attribute_name}' does not exist in UserSettings."
+                        'error': f"Attribute '{attribute_name}'\
+                              does not exist in UserSettings."
                     }))
             except User.DoesNotExist:
                 await self.send(text_data=json.dumps({
@@ -84,14 +90,16 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                 }))
             except UserSettings.DoesNotExist:
                 await self.send(text_data=json.dumps({
-                    'error': f"User settings for user ID '{user_id}' do not exist."
+                    'error': f"User settings for user ID '{user_id}'\
+                          do not exist."
                 }))
 
     async def handle_set_request(self, attribute_name, value, user_id):
         """
-        Gestionăm cererea de a seta un atribut în settings.py sau într-un model.
+        Gestionăm cererea de a seta un atribut \
+            în settings.py sau într-un model.
         """
-        from light_app.models import UserSettings  # Asigură-te că importăm modelul corect
+        from light_app.models import UserSettings
         from django.contrib.auth.models import User
 
         # Încercăm să setăm în settings.py
@@ -100,13 +108,14 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
             setattr(settings, attribute_name, value_casted)
 
             await self.send(text_data=json.dumps({
-                'message': f"Attribute '{attribute_name}' in settings set to '{value_casted}'."
+                'message': f"Attribute '{attribute_name}'\
+                      in settings set to '{value_casted}'."
             }))
         else:
-            # Dacă nu este în settings, încercăm să setăm în modelul UserSettings
             try:
                 user = await sync_to_async(User.objects.get)(id=user_id)
-                user_settings = await sync_to_async(UserSettings.objects.get)(user=user)
+                user_settings = (await sync_to_async(UserSettings.
+                                                     objects.get)(user=user))
 
                 if hasattr(user_settings, attribute_name):
                     value_casted = self.cast_value(value)
@@ -114,11 +123,13 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                     await sync_to_async(user_settings.save)()
 
                     await self.send(text_data=json.dumps({
-                        'message': f"Attribute '{attribute_name}' in UserSettings set to '{value_casted}'."
+                        'message': f"Attribute '{attribute_name}'\
+                              in UserSettings set to '{value_casted}'."
                     }))
                 else:
                     await self.send(text_data=json.dumps({
-                        'error': f"Attribute '{attribute_name}' does not exist in UserSettings."
+                        'error': f"Attribute '{attribute_name}' \
+                            does not exist in UserSettings."
                     }))
             except User.DoesNotExist:
                 await self.send(text_data=json.dumps({
@@ -126,7 +137,8 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
                 }))
             except UserSettings.DoesNotExist:
                 await self.send(text_data=json.dumps({
-                    'error': f"User settings for user ID '{user_id}' do not exist."
+                    'error': f"User settings for user ID '{user_id}' \
+                        do not exist."
                 }))
 
     def cast_value(self, value):
@@ -142,5 +154,5 @@ class MyWebSocketConsumer(AsyncWebsocketConsumer):
             try:
                 return float(value)
             except ValueError:
-                return value  # Returnăm valoarea originală dacă nu e nici boolean, nici numeric
+                return value
         return value
